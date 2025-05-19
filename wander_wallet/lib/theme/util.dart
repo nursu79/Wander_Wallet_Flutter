@@ -7,6 +7,12 @@ TextTheme createTextTheme(BuildContext context, String bodyFontString, String di
   TextTheme displayTextTheme =
       GoogleFonts.getTextTheme(displayFontString, baseTextTheme);
   TextTheme textTheme = displayTextTheme.copyWith(
+    displayLarge: bodyTextTheme.displayLarge,
+    displayMedium: bodyTextTheme.displayMedium,
+    displaySmall: bodyTextTheme.displaySmall,
+    titleLarge: bodyTextTheme.titleLarge,
+    titleMedium: bodyTextTheme.titleMedium,
+    titleSmall: bodyTextTheme.titleSmall,
     bodyLarge: bodyTextTheme.bodyLarge,
     bodyMedium: bodyTextTheme.bodyMedium,
     bodySmall: bodyTextTheme.bodySmall,

@@ -24,7 +24,7 @@ class AuthRepositoryImpl implements AuthRepository {
         final userError = UserError.fromJson(e.response?.data);
         return Error(error: userError);
       } else {
-        final userError = UserError(message: 'An unexpected error occurred');
+        final userError = UserError(message: 'Please check your internet connection and/or api address');
         return Error(error: userError);
       }
     } on Exception {
@@ -45,9 +45,12 @@ class AuthRepositoryImpl implements AuthRepository {
         final messageError = MessageError.fromJson(e.response?.data);
         return Error(error: messageError, loggedOut: true);
       } else {
-        final messageError = MessageError(message: 'An unexpected error occured');
+        final messageError = MessageError(message: 'Please check your internet connection and/or api address');
         return Error(error: messageError);
       }
+    } on Exception {
+      final messageError = MessageError(message: 'An unexpected error occurred');
+      return Error(error: messageError);
     }
   }
 }

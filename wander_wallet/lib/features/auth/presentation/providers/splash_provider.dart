@@ -23,14 +23,34 @@ class SplashError extends SplashScreenState {
   SplashError(this.messageError, this.loggedOut);
 }
 
+class SplashScreenNotifier extends AsyncNotifier<SplashScreenState> {
+  @override
+  Future<SplashScreenState> build() async {
+    state = const AsyncValue.loading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final res = await authRepository.getProfile();
 
-final splashProvider = FutureProvider.autoDispose((ref) async {
-  final authRepository = ref.read(authRepositoryProvider);
-  final res = await authRepository.getProfile();
-
-  if (res is Success) {
-    return SplashSuccess((res as Success).data);
-  } else {
-    return SplashError((res as Error).error, (res as Error).loggedOut);
+    if (res is Success) {
+      return SplashSuccess((res as Success).data);
+    } else {
+      throw SplashError((res as Error).error, (res as Error).loggedOut);
+    }
   }
-});
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final res = await authRepository.getProfile();
+
+    if (res is Success) {
+      state = AsyncValue.data(SplashSuccess((res as Success).data));
+    } else {
+      state = AsyncValue.error(SplashError((res as Error).error, (res as Error).loggedOut), StackTrace.current);
+    }
+  }
+}
+
+
+final splashProvider = AsyncNotifierProvider<SplashScreenNotifier, SplashScreenState>(
+  SplashScreenNotifier.new,
+);
