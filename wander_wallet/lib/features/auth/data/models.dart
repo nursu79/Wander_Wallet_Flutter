@@ -52,8 +52,8 @@ class TokenPayload {
   TokenPayload({required this.accessToken, required this.refreshToken});
 
   factory TokenPayload.fromJson(Map<String, dynamic> json) => TokenPayload(
-    accessToken: json['access_token'] ?? '',
-    refreshToken: json['refresh_token'] ?? ''
+    accessToken: json['accessToken'] ?? '',
+    refreshToken: json['refreshToken'] ?? ''
   );
 }
 
@@ -91,7 +91,9 @@ class User {
     username: json['username'],
     email: json['email'],
     avatarUrl: json['avatarUrl'],
-    notifications: (json['notifications']).map(Notification.fromJson).toList()
+    notifications: (json['notifications'] as List<dynamic>).toList().map((notif) {
+      return Notification.fromJson(notif);
+    }).toList()
   );
 }
 

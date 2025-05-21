@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/core/widgets/texts.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/splash_provider.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/login_screen.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({ super.key });
@@ -23,13 +21,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         .when(
           data: (data) {
             if (data is SplashSuccess) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+              Navigator.of(context).pushNamed('/main');
             }
           },
           error: (error, stackTrace) {
             if (error is SplashError) {
               if (error.loggedOut) {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                Navigator.of(context).pushNamed('/login');
               }
             }
           },

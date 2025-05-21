@@ -12,7 +12,11 @@ TextTheme createTextTheme(BuildContext context, String bodyFontString, String di
     displaySmall: bodyTextTheme.displaySmall,
     titleLarge: bodyTextTheme.titleLarge,
     titleMedium: bodyTextTheme.titleMedium,
-    titleSmall: bodyTextTheme.titleSmall,
+    titleSmall: TextStyle(
+      fontFamily: bodyTextTheme.bodyLarge?.fontFamily,
+      fontSize: 24,
+      fontWeight: FontWeight.w900
+    ),
     bodyLarge: bodyTextTheme.bodyLarge,
     bodyMedium: bodyTextTheme.bodyMedium,
     bodySmall: bodyTextTheme.bodySmall,
