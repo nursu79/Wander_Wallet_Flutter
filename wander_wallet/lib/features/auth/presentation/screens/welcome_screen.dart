@@ -61,8 +61,7 @@ class WelcomeScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
-                  outlined: true,
-                  color: theme.colorScheme.primary,
+                  color: theme.colorScheme.surface,
                   textColor: theme.colorScheme.primary,
                 ),
               ],
