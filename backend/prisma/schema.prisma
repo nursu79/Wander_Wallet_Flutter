@@ -15,6 +15,7 @@ model User {
   username      String
   email         String         @unique
   password      String
+  role          String         @default("user")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   trips         Trip[]
@@ -39,6 +40,7 @@ model Trip {
   expenses      Expense[]
   imgUrl        String?
   notifications Notification[]
+  status        String         @default("PLANNING") // PLANNING, ONGOING, COMPLETED, CANCELLED
 
   @@index([startDate, endDate, userId])
 }
@@ -47,7 +49,7 @@ model Expense {
   id        String   @id @default(cuid())
   name      String
   amount    Float
-  category  Category @default(OTHER)
+  category  String   // FOOD, TRANSPORTATION, ACCOMMODATION, ENTERTAINMENT, SHOPPING, OTHER
   date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -58,15 +60,6 @@ model Expense {
   @@index([tripId, category, date])
 }
 
-enum Category {
-  FOOD
-  TRANSPORTATION
-  ACCOMMODATION
-  ENTERTAINMENT
-  SHOPPING
-  OTHER
-}
-
 model RefreshToken {
   id        String   @id @default(cuid())
   token     String   @unique
@@ -74,6 +67,7 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  expiresAt DateTime
 
   @@index([userId])
 }
