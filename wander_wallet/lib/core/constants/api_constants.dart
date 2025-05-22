@@ -1,5 +1,3 @@
-import 'package:wander_wallet/core/constants/constants.dart';
-
 class ApiConstants {
   // Auth endpoints
   static const String login = '/login';
@@ -8,4 +6,7 @@ class ApiConstants {
   static const String refreshToken = '/token';
   static const String logout = '/logout';
   static const String notifications = '/notifications';
+
+  // Admin endpoints
+  static const String admin = '/admin';
 }

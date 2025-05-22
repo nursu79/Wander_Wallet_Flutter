@@ -3,7 +3,6 @@ import 'package:wander_wallet/core/constants/constants.dart'
     as Constants; // Renamed alias to avoid conflict
 import 'package:wander_wallet/core/constants/api_constants.dart'; // Import ApiConstants
 import 'package:wander_wallet/core/storage/token_storage.dart'; // Corrected import path
-// Removed imports for providers.dart and flutter_riverpod as they don't seem directly used in DioClient class definition
 
 class DioClient {
   final Dio _dio;
@@ -14,8 +13,8 @@ class DioClient {
       ..options.baseUrl =
           Constants
               .baseUrl // Use baseUrl from constants.dart
-      ..options.connectTimeout = const Duration(milliseconds: 5000) // 5 seconds
-      ..options.receiveTimeout = const Duration(milliseconds: 3000) // 3 seconds
+      ..options.connectTimeout = const Duration(seconds: 30) // 30 seconds
+      ..options.receiveTimeout = const Duration(seconds: 30) // 30 seconds
       ..options.responseType = ResponseType.json
       ..interceptors.add(
         InterceptorsWrapper(
