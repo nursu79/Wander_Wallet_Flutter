@@ -27,11 +27,11 @@ export default class UserController {
                     });
                 }
             }
-            return res.status(400).json({ 
+            return res.status(400).json({
                 username: !username ? "Username is required" : undefined,
                 email: !email ? "Email is required" : undefined,
                 password: !password ? "Password is required" : undefined
-             });
+            });
         }
 
         const existingUser = await prisma.user.findUnique({
@@ -56,7 +56,7 @@ export default class UserController {
                     });
                 }
             }
-            return res.status(409).json({ 
+            return res.status(409).json({
                 email: "User already exists"
             });
         }
@@ -74,9 +74,14 @@ export default class UserController {
         const accessToken = generateAccessToken(newUser);
         const refreshToken = generateRefreshToken(newUser);
 
+        // Calculate expiration date (7 days from now)
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+
         await prisma.refreshToken.create({
             data: {
                 token: refreshToken,
+                expiresAt,
                 user: {
                     connect: {
                         id: newUser.id
@@ -90,8 +95,14 @@ export default class UserController {
                 where: {
                     id: newUser.id
                 },
-                omit: {
-                    password: true,
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    avatarUrl: true,
+                    createdAt: true,
+                    updatedAt: true
                 }
             }),
             accessToken,
@@ -100,12 +111,12 @@ export default class UserController {
     }
 
     static async loginUser(req: Request, res: Response) {
-        const {email, password} = req.body || {};
+        const { email, password } = req.body || {};
         if (!email || !password) {
             return res.status(400).json({
                 email: !email ? "Email is required" : undefined,
                 password: !password ? "Password is required" : undefined
-             });
+            });
         }
 
         const user = await prisma.user.findUnique({
@@ -116,23 +127,28 @@ export default class UserController {
 
         if (!user) {
             return res.status(401).json({
-                message: "Invalid email or password" 
+                message: "Invalid email or password"
             });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
-                message: "Invalid email or password" 
+                message: "Invalid email or password"
             });
         }
 
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
+        // Calculate expiration date (7 days from now)
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+
         await prisma.refreshToken.create({
             data: {
                 token: refreshToken,
+                expiresAt,
                 user: {
                     connect: {
                         id: user.id
@@ -141,7 +157,24 @@ export default class UserController {
             }
         });
 
+        // Get user without password
+        const userWithoutPassword = await prisma.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                role: true,
+                avatarUrl: true,
+                createdAt: true,
+                updatedAt: true
+            }
+        });
+
         return res.status(200).json({
+            user: userWithoutPassword,
             accessToken,
             refreshToken
         });
@@ -151,16 +184,16 @@ export default class UserController {
         const { refreshToken } = req.body || {};
 
         if (!refreshToken) {
-            return res.status(401).json({ 
-                message: "Refresh token is required" 
+            return res.status(401).json({
+                message: "Refresh token is required"
             });
         }
 
         const user = verifyRefreshToken(refreshToken) as JwtPayload;
 
         if (!user) {
-            return res.status(401).json({ 
-                message: "Refresh token is expired or invalid" 
+            return res.status(401).json({
+                message: "Refresh token is expired or invalid"
             });
         }
 
@@ -169,13 +202,13 @@ export default class UserController {
                 email: user.email
             }
         });
-    
+
         if (!existingUser) {
-            return res.status(401).json({ 
-                message: "Refresh token is expired or invalid" 
+            return res.status(401).json({
+                message: "Refresh token is expired or invalid"
             });
         }
-    
+
         const allUserTokens = await prisma.refreshToken.findMany({
             where: {
                 userId: existingUser.id
@@ -197,9 +230,14 @@ export default class UserController {
         const newAccessToken = generateAccessToken(existingUser);
         const newRefreshToken = generateRefreshToken(existingUser);
 
+        // Calculate expiration date (7 days from now)
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+
         await prisma.refreshToken.create({
             data: {
                 token: newRefreshToken,
+                expiresAt,
                 user: {
                     connect: {
                         id: existingUser.id
@@ -215,11 +253,10 @@ export default class UserController {
     }
 
     static async getProfile(req: Request, res: Response) {
-        const user = getUser(req);
-
+        const user = await getUser(req);
         if (!user) {
-            return res.status(401).json({ 
-                message: "Access token is expired or invalid" 
+            return res.status(401).json({
+                message: "Token not found"
             });
         }
 
@@ -227,17 +264,21 @@ export default class UserController {
             where: {
                 email: user.email
             },
-            omit: {
-                password: true,
-            },
-            include: {
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                role: true,
+                avatarUrl: true,
+                createdAt: true,
+                updatedAt: true,
                 notifications: true
             }
         });
 
         if (!existingUser) {
-            return res.status(401).json({ 
-                message: "Access token is expired or invalid" 
+            return res.status(404).json({
+                message: "User not found"
             });
         }
 
@@ -268,7 +309,7 @@ export default class UserController {
                     });
                 }
             }
-            return res.status(400).json({ 
+            return res.status(400).json({
                 username: !username ? "Username is required" : undefined,
                 email: !email ? "Email is required" : undefined,
                 message: !oldPassword ? "Your Password is required" : undefined
@@ -338,8 +379,14 @@ export default class UserController {
                 where: {
                     id: existingUser?.id
                 },
-                omit: {
-                    password: true
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    avatarUrl: true,
+                    createdAt: true,
+                    updatedAt: true
                 },
                 data: {
                     username: username,
