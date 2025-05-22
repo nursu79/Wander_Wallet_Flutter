@@ -50,33 +50,43 @@ class WelcomeScreen extends StatelessWidget {
                   child: Hero(
                     tag: 'welcome_image',
                     child: Image.asset(
-                      'images/welcome.png',
+                      'images/wander_wallet_hero.png',
                       height: size.height * 0.35,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 const Spacer(),
-                RectangularButton(
-                  text: 'Get Started',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SignupScreen()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                RectangularButton(
-                  text: 'Sign in',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    );
-                  },
-                  color: theme.colorScheme.surface,
-                  textColor: theme.colorScheme.primary,
+                Center(
+                  child: Column(
+                    children: [
+                      RectangularButton(
+                        text: 'Get Started',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SignupScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      RectangularButton(
+                        text: 'Sign in',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        color: theme.colorScheme.surface,
+                        textColor: theme.colorScheme.primary,
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 32),
               ],

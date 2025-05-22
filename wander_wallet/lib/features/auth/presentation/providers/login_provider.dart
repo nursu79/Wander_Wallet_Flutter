@@ -38,18 +38,8 @@ class LoginState extends StateNotifier<LoginScreenState> {
     final loginResult = await _authRepository.login(email, password);
 
     if (loginResult is Success<TokenPayload, UserError>) {
-      final profileResult = await _authRepository.getProfile();
-
-      if (profileResult is Success<UserPayload, MessageError>) {
-        final userRole = profileResult.data.user.role;
-        state = LoginSuccess(loginResult.data, role: userRole);
-      } else if (profileResult is Error<UserPayload, MessageError>) {
-        state = LoginError(UserError(message: profileResult.error.message));
-      } else {
-        state = LoginError(
-          UserError(message: 'An unexpected error occurred after login.'),
-        );
-      }
+      final userRole = loginResult.data.user?.role;
+      state = LoginSuccess(loginResult.data, role: userRole);
     } else if (loginResult is Error<TokenPayload, UserError>) {
       state = LoginError(loginResult.error);
     } else {

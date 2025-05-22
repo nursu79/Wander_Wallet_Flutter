@@ -45,12 +45,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   void _signup() {
-    print("---> _signup: Button tapped <---");
     if (!_formKey.currentState!.validate()) {
-      print("---> _signup: Form validation failed <---");
       return;
     }
-    print("---> _signup: Form validation successful <---");
 
     final username = _usernameController.text.trim();
     final email = _emailController.text.trim();
@@ -58,28 +55,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final confirmPassword = _confirmPasswordController.text.trim();
 
     if (password != confirmPassword) {
-      print("---> _signup: Passwords do not match <---");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Passwords do not match")));
       return;
     }
-    print("---> _signup: Passwords match. Calling signup provider <---");
 
-    final notifier = ref.read(signupProvider.notifier);
-    if (notifier == null) {
-      print("---> _signup: ERROR - Signup provider notifier is null! <---");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("App configuration error. Please restart."),
-        ),
-      );
-      return;
-    }
-    print("---> _signup: Notifier found. Initiating signup call. <---");
-
-    notifier.signup(username, email, password);
-    print("---> _signup: signup provider call initiated <---");
+    ref.read(signupProvider.notifier).signup(username, email, password);
   }
 
   void _showTermsDialog(String title) {
@@ -177,6 +159,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    prefixIcon: Icon(
+                      Icons.person_outline,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -194,14 +180,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    prefixIcon: Icon(
+                      Icons.email_outlined,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -212,9 +199,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    hintText: 'Enter password',
+                    hintText: 'Enter your password',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.lock_outline,
+                      color: theme.colorScheme.primary,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -232,10 +223,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'Please enter your password';
                     }
                     return null;
                   },
@@ -246,9 +234,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   obscureText: !_isConfirmPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    hintText: 'Re-enter password',
+                    hintText: 'Confirm your password',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.lock_outline,
+                      color: theme.colorScheme.primary,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -275,76 +267,41 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
                 Center(
-                  child: Text.rich(
-                    TextSpan(
-                      text:
-                          'Creating an account means that you are okay with our ',
-                      style: theme.textTheme.bodySmall,
-                      children: [
-                        WidgetSpan(
-                          child: GestureDetector(
-                            onTap: () => _showTermsDialog('Terms of Service'),
-                            child: Text(
-                              'Terms of Service',
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const TextSpan(text: ' and our '),
-                        WidgetSpan(
-                          child: GestureDetector(
-                            onTap: () => _showTermsDialog('Privacy Policy'),
-                            child: Text(
-                              'Privacy Policy',
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: RectangularButton(
-                      onPressed: signupState is SignupLoading ? null : _signup,
-                      text:
-                          signupState is SignupLoading
-                              ? 'Creating Account...'
-                              : 'Create an Account',
-                      width: double.infinity,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Already have an account? Sign In',
-                      style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w600,
+                  child: Column(
+                    children: [
+                      RectangularButton(
+                        onPressed:
+                            signupState is SignupLoading ? null : _signup,
+                        text:
+                            signupState is SignupLoading
+                                ? 'Signing up...'
+                                : 'Sign Up',
+                        isLoading: signupState is SignupLoading,
                       ),
-                    ),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Already have an account? Sign in',
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 32),
               ],
             ),
           ),
