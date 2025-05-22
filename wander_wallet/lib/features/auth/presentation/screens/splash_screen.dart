@@ -4,7 +4,8 @@ import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/core/widgets/texts.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/splash_provider.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/login_screen.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:wander_wallet/features/dashboard/presentation/screens/user_dashboard.dart';
+import 'package:wander_wallet/features/admin/presentation/screens/admin_dashboard.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -22,20 +23,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       next.when(
         data: (data) {
           if (data is SplashSuccess) {
-            // TODO: In the future, check user role and navigate to the correct dashboard
-            // For now, just show a welcome back message or navigate to a dashboard placeholder
-            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => WelcomeScreen()),
-            );
+            // Navigate based on user role
+            if (data.userPayload.user.role == 'admin') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => AdminDashboard()),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => UserDashboard()),
+              );
+            }
           }
         },
         error: (error, stackTrace) {
-          // If not authenticated, go to WelcomeScreen (not LoginScreen)
+          // If not authenticated, go to LoginScreen
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => WelcomeScreen()),
+            MaterialPageRoute(builder: (_) => LoginScreen()),
           );
         },
         loading: () {},

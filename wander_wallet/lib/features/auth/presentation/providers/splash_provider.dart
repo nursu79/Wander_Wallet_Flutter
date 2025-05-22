@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/features/auth/domain/auth_repository.dart';
 
 sealed class SplashScreenState {
   SplashScreenState();
@@ -24,10 +25,13 @@ class SplashError extends SplashScreenState {
 }
 
 class SplashScreenNotifier extends AsyncNotifier<SplashScreenState> {
+  late final AuthRepository authRepository;
+
+  SplashScreenNotifier();
   @override
   Future<SplashScreenState> build() async {
+    authRepository = ref.read(authRepositoryProvider);
     state = const AsyncValue.loading();
-    final authRepository = ref.read(authRepositoryProvider);
     final res = await authRepository.getProfile();
 
     if (res is Success) {
@@ -39,17 +43,18 @@ class SplashScreenNotifier extends AsyncNotifier<SplashScreenState> {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    final authRepository = ref.read(authRepositoryProvider);
     final res = await authRepository.getProfile();
 
     if (res is Success) {
       state = AsyncValue.data(SplashSuccess((res as Success).data));
     } else {
-      state = AsyncValue.error(SplashError((res as Error).error, (res as Error).loggedOut), StackTrace.current);
+      state = AsyncValue.error(
+        SplashError((res as Error).error, (res as Error).loggedOut),
+        StackTrace.current,
+      );
     }
   }
 }
-
 
 final splashProvider = AsyncNotifierProvider<SplashScreenNotifier, SplashScreenState>(
   SplashScreenNotifier.new,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/login_screen.dart';
+import 'package:wander_wallet/features/auth/presentation/screens/main_content_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/splash_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/signup_screen.dart';
@@ -21,6 +22,9 @@ class AuthNavigator extends StatelessWidget {
 
           case '/welcome':
             return MaterialPageRoute(builder: (_) => WelcomeScreen());
+          
+          case '/main':
+            return MaterialPageRoute(builder: (_) => MainContentScreen());
 
           case '/signup':
             return MaterialPageRoute(builder: (_) => SignupScreen());
