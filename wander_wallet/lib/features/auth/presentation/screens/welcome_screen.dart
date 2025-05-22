@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
-import 'login_screen.dart';
-import 'signup_screen.dart';
+import 'package:wander_wallet/features/auth/presentation/screens/login_screen.dart';
+import 'package:wander_wallet/features/auth/presentation/screens/signup_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -9,48 +9,62 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.1),
+              theme.colorScheme.surface,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  "images/wander_wallet_hero.png",
-                  height: 220,
-                  width: 220,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 40),
                 Text(
-                  'Wander Wallet',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: theme.colorScheme.primary,
+                  'Welcome to\nWander Wallet',
+                  style: theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                  child: Text(
-                    'Sign up and create your first trip based on your budget.',
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
+                Text(
+                  'Your personal travel companion for managing expenses and exploring the world.',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    height: 1.5,
                   ),
                 ),
                 const SizedBox(height: 40),
+                Center(
+                  child: Hero(
+                    tag: 'welcome_image',
+                    child: Image.asset(
+                      'images/welcome.png',
+                      height: size.height * 0.35,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                const Spacer(),
                 RectangularButton(
-                  text: 'Create an Account',
+                  text: 'Get Started',
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => SignupScreen()),
+                      MaterialPageRoute(builder: (_) => const SignupScreen()),
                     );
                   },
-                  color: theme.colorScheme.primary,
-                  textColor: theme.colorScheme.onPrimary,
                 ),
                 const SizedBox(height: 16),
                 RectangularButton(
@@ -64,6 +78,7 @@ class WelcomeScreen extends StatelessWidget {
                   color: theme.colorScheme.surface,
                   textColor: theme.colorScheme.primary,
                 ),
+                const SizedBox(height: 32),
               ],
             ),
           ),
