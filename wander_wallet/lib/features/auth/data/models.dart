@@ -46,17 +46,20 @@ class TokenPayload {
   final String accessToken;
   final String refreshToken;
   final String? role;
+  final User? user;
 
   TokenPayload({
     required this.accessToken,
     required this.refreshToken,
     this.role,
+    this.user,
   });
 
   factory TokenPayload.fromJson(Map<String, dynamic> json) => TokenPayload(
     accessToken: json['accessToken'] ?? '',
     refreshToken: json['refreshToken'] ?? '',
     role: json['role'],
+    user: json['user'] != null ? User.fromJson(json['user']) : null,
   );
 }
 

@@ -8,4 +8,5 @@ abstract class AuthRepository {
     String email,
     String password,
   );
+  Future<Result<UserPayload, UserError>> promoteToAdmin(String userId);
 }
