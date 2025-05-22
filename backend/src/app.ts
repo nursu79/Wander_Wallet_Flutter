@@ -1,4 +1,4 @@
-import express, {Request, Response } from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -8,6 +8,7 @@ import tripRouter from "./routes/TripRouter.js";
 import prisma from "./dbClient.js";
 import expenseRouter from "./routes/ExpenseRouter.js";
 import statsRouter from "./routes/StatsRouter.js";
+import adminRouter from "./routes/adminRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use(userRouter);
 app.use(tripRouter);
 app.use(expenseRouter);
 app.use(statsRouter);
+app.use('/admin', adminRouter);
 
 app.get("/", (req, res) => {
     res.json({ message: "Hello World!" });
@@ -43,7 +45,8 @@ app.get("/deleteAll", async (req, res) => {
 })
 
 const port = process.env.PORT || 3000;
+const host = '0.0.0.0'; // Listen on all network interfaces
 
-app.listen(Number(port), "0.0.0.0", () => {
-    console.log("Server is alive");
-})
+app.listen(Number(port), host, () => {
+    console.log(`Server is running on http://${host}:${port}`);
+});
