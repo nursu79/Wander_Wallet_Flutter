@@ -7,7 +7,7 @@ import 'package:wander_wallet/features/auth/presentation/screens/login_screen.da
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({ super.key });
+  const SplashScreen({super.key});
 
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
@@ -19,22 +19,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
 
     ref.listenManual(splashProvider, (prev, next) {
-      next
-        .when(
-          data: (data) {
-            if (data is SplashSuccess) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
-            }
-          },
-          error: (error, stackTrace) {
-            if (error is SplashError) {
-              if (error.loggedOut) {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-              }
-            }
-          },
-          loading: () {}
-        );
+      next.when(
+        data: (data) {
+          if (data is SplashSuccess) {
+            // TODO: In the future, check user role and navigate to the correct dashboard
+            // For now, just show a welcome back message or navigate to a dashboard placeholder
+            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+            );
+          }
+        },
+        error: (error, stackTrace) {
+          // If not authenticated, go to WelcomeScreen (not LoginScreen)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomeScreen()),
+          );
+        },
+        loading: () {},
+      );
     });
   }
 
@@ -46,7 +51,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Center(
-        child: Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
 
@@ -58,27 +63,49 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
               SizedBox(height: 24),
               state.when(
-                data: (res) => (res is SplashSuccess) ? Text('Welcome back, ${res.userPayload.user.username}', style: Theme.of(context).textTheme.bodySmall) : Text('Welcome to Wander Wallet', style: Theme.of(context).textTheme.bodySmall),
-                error: (err, _) => (err is SplashError && err.loggedOut) ? Text('You are logged out', style: Theme.of(context).textTheme.bodySmall) : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SmallErrorText(text: (err is SplashError ? err.messageError.message : err.toString())),
-                    SizedBox(height: 8),
-                    RectangularButton(
-                      onPressed: () {
-                        ref.read(splashProvider.notifier).refresh();
-                      },
-                      text: 'Retry'
-                    ),
-                  ],
-                ),
-                loading: () => CircularProgressIndicator()
-              )
+                data:
+                    (res) =>
+                        (res is SplashSuccess)
+                            ? Text(
+                              'Welcome back, ${res.userPayload.user.username}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
+                            : Text(
+                              'Welcome to Wander Wallet',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                error:
+                    (err, _) =>
+                        (err is SplashError && err.loggedOut)
+                            ? Text(
+                              'You are logged out',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
+                            : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SmallErrorText(
+                                  text:
+                                      (err is SplashError
+                                          ? err.messageError.message
+                                          : err.toString()),
+                                ),
+                                SizedBox(height: 8),
+                                RectangularButton(
+                                  onPressed: () {
+                                    ref.read(splashProvider.notifier).refresh();
+                                  },
+                                  text: 'Retry',
+                                ),
+                              ],
+                            ),
+                loading: () => CircularProgressIndicator(),
+              ),
             ],
-          )
+          ),
         ),
-      )
+      ),
     );
   }
-} 
+}

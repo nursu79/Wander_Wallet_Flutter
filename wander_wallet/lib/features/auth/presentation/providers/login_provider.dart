@@ -17,8 +17,9 @@ class LoginLoading extends LoginScreenState {
 
 class LoginSuccess extends LoginScreenState {
   final TokenPayload tokenPayload;
+  final String? role;
 
-  LoginSuccess(this.tokenPayload);
+  LoginSuccess(this.tokenPayload, {this.role});
 }
 
 class LoginError extends LoginScreenState {
@@ -34,16 +35,33 @@ class LoginState extends StateNotifier<LoginScreenState> {
 
   Future<void> login(String email, String password) async {
     state = LoginLoading();
-    final result = await _authRepository.login(email, password);
+    final loginResult = await _authRepository.login(email, password);
 
-    if (result is Success) {
-      state = LoginSuccess((result as Success<TokenPayload, UserError>).data);
+    if (loginResult is Success<TokenPayload, UserError>) {
+      final profileResult = await _authRepository.getProfile();
+
+      if (profileResult is Success<UserPayload, MessageError>) {
+        final userRole = profileResult.data.user.role;
+        state = LoginSuccess(loginResult.data, role: userRole);
+      } else if (profileResult is Error<UserPayload, MessageError>) {
+        state = LoginError(UserError(message: profileResult.error.message));
+      } else {
+        state = LoginError(
+          UserError(message: 'An unexpected error occurred after login.'),
+        );
+      }
+    } else if (loginResult is Error<TokenPayload, UserError>) {
+      state = LoginError(loginResult.error);
     } else {
-      state = LoginError((result as Error<TokenPayload, UserError>).error);
+      state = LoginError(
+        UserError(message: 'An unexpected error occurred during login.'),
+      );
     }
   }
 }
 
-final loginProvider = StateNotifierProvider<LoginState, LoginScreenState>((ref) {
+final loginProvider = StateNotifierProvider<LoginState, LoginScreenState>((
+  ref,
+) {
   return LoginState(ref.read(authRepositoryProvider));
 });
