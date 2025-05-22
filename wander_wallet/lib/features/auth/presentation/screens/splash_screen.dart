@@ -14,10 +14,35 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    _controller.forward();
 
     ref.listenManual(splashProvider, (prev, next) {
       next.when(
@@ -50,65 +75,125 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final AsyncValue<SplashScreenState> state = ref.watch(splashProvider);
+    final splashState = ref.watch(splashProvider);
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: [
-              Image.asset(
-                "images/wander_wallet_hero.png",
-                height: 300,
-                width: 300,
-              ),
-              SizedBox(height: 24),
-              state.when(
-                data:
-                    (res) =>
-                        (res is SplashSuccess)
-                            ? Text(
-                              'Welcome back, ${res.userPayload.user.username}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            )
-                            : Text(
-                              'Welcome to Wander Wallet',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                error:
-                    (err, _) =>
-                        (err is SplashError && err.loggedOut)
-                            ? Text(
-                              'You are logged out',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            )
-                            : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SmallErrorText(
-                                  text:
-                                      (err is SplashError
-                                          ? err.messageError.message
-                                          : err.toString()),
-                                ),
-                                SizedBox(height: 8),
-                                RectangularButton(
-                                  onPressed: () {
-                                    ref.read(splashProvider.notifier).refresh();
-                                  },
-                                  text: 'Retry',
-                                ),
-                              ],
-                            ),
-                loading: () => CircularProgressIndicator(),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.1),
+              theme.colorScheme.surface,
             ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Column(
+                          children: [
+                            Hero(
+                              tag: 'splash_logo',
+                              child: Image.asset(
+                                'images/wander_wallet_hero.png',
+                                height: size.height * 0.25,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Wander Wallet',
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 48),
+                splashState.when(
+                  data: (data) {
+                    if (data is SplashError) {
+                      return Column(
+                        children: [
+                          Text(
+                            data.messageError.message ?? 'Something went wrong',
+                            style: TextStyle(
+                              color: theme.colorScheme.error,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          RectangularButton(
+                            text: 'Retry',
+                            onPressed: () {
+                              ref.read(splashProvider.notifier).refresh();
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                  error: (error, _) {
+                    if (error is SplashError) {
+                      return Column(
+                        children: [
+                          Text(
+                            error.messageError.message ??
+                                'Something went wrong',
+                            style: TextStyle(
+                              color: theme.colorScheme.error,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          RectangularButton(
+                            text: 'Retry',
+                            onPressed: () {
+                              ref.read(splashProvider.notifier).refresh();
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                  loading:
+                      () => CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.primary,
+                        ),
+                      ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
