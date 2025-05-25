@@ -9,4 +9,13 @@ class ApiConstants {
 
   // Admin endpoints
   static const String admin = '/admin';
+
+  // Trip endpoints
+  static const String allTrips = '/trips';
+  static const String pastTrips = '/pastTrips';
+  static const String currentTrips = '/currentTrips';
+  static const String pendingTrips = '/pendingTrips';
+  static String getTripPath(String id) {
+    return '/trips/$id';
+  }
 }

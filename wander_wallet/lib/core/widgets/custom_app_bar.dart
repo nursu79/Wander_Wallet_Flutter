@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wander_wallet/core/constants.dart';
-import '../../features/auth/data/models.dart';
-
+import 'package:wander_wallet/core/constants/constants.dart';
+import 'package:wander_wallet/core/models/success.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final User user;
   final double height;
@@ -51,7 +50,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/notifications');
+                        print('$baseUrl/userAvatars/${user.avatarUrl}');
+                        //Navigator.pushNamed(context, '/notifications');
                       },
                       color: Theme.of(context).colorScheme.onPrimary,
                       icon: Icon(

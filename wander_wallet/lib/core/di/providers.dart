@@ -4,6 +4,9 @@ import 'package:wander_wallet/core/constants/constants.dart';
 import 'package:wander_wallet/features/auth/data/auth_remote_data_source.dart';
 import 'package:wander_wallet/features/auth/domain/auth_repository.dart';
 import 'package:wander_wallet/features/auth/domain/auth_repository_impl.dart';
+import 'package:wander_wallet/features/trips/data/trips_remote_data_source.dart';
+import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
+import 'package:wander_wallet/features/trips/domain/trips_repository_impl.dart';
 import '../storage/token_storage.dart';
 import '../network/token_interceptor.dart';
 
@@ -39,5 +42,15 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
     ref.read(authRemoteDataSourceProvider),
     tokenStorage,
+  );
+});
+
+final tripsRemoteDataSourceProvider = Provider<TripsRemoteDataSource>((ref) {
+  return TripsRemoteDataSource(ref.read(dioProvider));
+});
+
+final tripsRepositoryProvider = Provider<TripsRepository>((ref) {
+  return TripsRepositoryImpl(
+    ref.read(tripsRemoteDataSourceProvider)
   );
 });
