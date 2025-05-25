@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/login_provider.dart';
-import 'package:wander_wallet/features/dashboard/presentation/screens/user_dashboard.dart';
-import 'package:wander_wallet/features/admin/presentation/screens/admin_dashboard.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'signup_screen.dart';
 
@@ -41,15 +39,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (loginState is LoginSuccess) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (loginState.role == 'admin') {
-          Navigator.pushReplacement(
+        if (loginState.loginPayload.user?.role == 'admin') {
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(builder: (_) => AdminDashboard()),
+            '/admin_dashboard'
           );
         } else {
-          Navigator.pushReplacement(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(builder: (_) => UserDashboard()),
+            '/user_dashboard'
           );
         }
       });

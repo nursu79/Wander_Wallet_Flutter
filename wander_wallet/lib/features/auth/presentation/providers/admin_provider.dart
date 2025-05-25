@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import '../../domain/auth_repository.dart';
 
 sealed class AdminScreenState {
@@ -37,9 +39,9 @@ class AdminState extends StateNotifier<AdminScreenState> {
     try {
       final result = await _authRepository.promoteToAdmin(userId);
       if (result is Success<UserPayload, UserError>) {
-        state = AdminSuccess(result.data);
+        state = AdminSuccess((result as Success).data);
       } else if (result is Error<UserPayload, UserError>) {
-        state = AdminError(result.error);
+        state = AdminError((result as Error).error);
       }
     } catch (e) {
       state = AdminError(UserError(message: 'An unexpected error occurred'));

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import '../../domain/auth_repository.dart';
 
 sealed class SplashState {
@@ -40,9 +42,9 @@ class SplashNotifier extends StateNotifier<AsyncValue<SplashState>> {
     try {
       final result = await _authRepository.getProfile();
       if (result is Success<UserPayload, MessageError>) {
-        state = AsyncValue.data(SplashSuccess(result.data));
+        state = AsyncValue.data(SplashSuccess((result as Success).data));
       } else if (result is Error<UserPayload, MessageError>) {
-        state = AsyncValue.data(SplashError(result.error));
+        state = AsyncValue.data(SplashError((result as Error).error));
       }
     } catch (e) {
       state = AsyncValue.data(

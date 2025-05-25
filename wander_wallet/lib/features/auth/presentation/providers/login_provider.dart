@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import '../../domain/auth_repository.dart';
 
 sealed class LoginScreenState {
@@ -16,10 +18,9 @@ class LoginLoading extends LoginScreenState {
 }
 
 class LoginSuccess extends LoginScreenState {
-  final TokenPayload tokenPayload;
-  final String? role;
+  final LoginPayload loginPayload;
 
-  LoginSuccess(this.tokenPayload, {this.role});
+  LoginSuccess(this.loginPayload);
 }
 
 class LoginError extends LoginScreenState {
@@ -37,11 +38,10 @@ class LoginState extends StateNotifier<LoginScreenState> {
     state = LoginLoading();
     final loginResult = await _authRepository.login(email, password);
 
-    if (loginResult is Success<TokenPayload, UserError>) {
-      final userRole = loginResult.data.user?.role;
-      state = LoginSuccess(loginResult.data, role: userRole);
-    } else if (loginResult is Error<TokenPayload, UserError>) {
-      state = LoginError(loginResult.error);
+    if (loginResult is Success<LoginPayload, UserError>) {
+      state = LoginSuccess((loginResult as Success).data);
+    } else if (loginResult is Error<LoginPayload, UserError>) {
+      state = LoginError((loginResult as Error).error);
     } else {
       state = LoginError(
         UserError(message: 'An unexpected error occurred during login.'),

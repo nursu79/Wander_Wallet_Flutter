@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/features/auth/domain/auth_repository.dart';
 
 sealed class MainContentScreenState {

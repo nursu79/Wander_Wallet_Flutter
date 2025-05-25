@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wander_wallet/core/constants/constants.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/splash_provider.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/auth_navigator.dart';
-import 'package:wander_wallet/features/dashboard/presentation/screens/user_dashboard.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -32,18 +29,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return splashState.when(
       data: (state) {
         if (state is SplashSuccess && state.isAuthenticated) {
-          // Only go to dashboard if user is authenticated
-          return UserDashboard();
+          if (state.userPayload.user.role == 'admin') {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(
+                context,
+                '/admin_dashboard',
+              );
+            });
+          }
+          else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(
+                context,
+                '/user_dashboard',
+              );
+            });
+          }
         } else {
           // Navigate to welcome screen for non-authenticated users
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacement(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+              '/welcome'
             );
           });
-          return const SizedBox.shrink();
         }
+        return const SizedBox.shrink();
       },
       loading:
           () => Scaffold(
