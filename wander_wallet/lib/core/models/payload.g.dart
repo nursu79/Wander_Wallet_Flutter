@@ -1,0 +1,68 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'payload.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UserPayload _$UserPayloadFromJson(Map<String, dynamic> json) =>
+    UserPayload(user: User.fromJson(json['user'] as Map<String, dynamic>));
+
+Map<String, dynamic> _$UserPayloadToJson(UserPayload instance) =>
+    <String, dynamic>{'user': instance.user};
+
+LoginPayload _$LoginPayloadFromJson(Map<String, dynamic> json) => LoginPayload(
+  accessToken: json['accessToken'] as String,
+  refreshToken: json['refreshToken'] as String,
+  user:
+      json['user'] == null
+          ? null
+          : User.fromJson(json['user'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$LoginPayloadToJson(LoginPayload instance) =>
+    <String, dynamic>{
+      'accessToken': instance.accessToken,
+      'refreshToken': instance.refreshToken,
+      'user': instance.user,
+    };
+
+TripPayload _$TripPayloadFromJson(Map<String, dynamic> json) => TripPayload(
+  trip: Trip.fromJson(json['trip'] as Map<String, dynamic>),
+  totalExpenditure: json['totalExpenditure'] as num,
+  expensesByCategory:
+      (json['expensesByCategory'] as List<dynamic>)
+          .map((e) => ExpenseByCategory.fromJson(e as Map<String, dynamic>))
+          .toList(),
+);
+
+Map<String, dynamic> _$TripPayloadToJson(TripPayload instance) =>
+    <String, dynamic>{
+      'trip': instance.trip,
+      'totalExpenditure': instance.totalExpenditure,
+      'expensesByCategory': instance.expensesByCategory,
+    };
+
+TripsPayload _$TripsPayloadFromJson(Map<String, dynamic> json) => TripsPayload(
+  trips:
+      (json['trips'] as List<dynamic>)
+          .map((e) => Trip.fromJson(e as Map<String, dynamic>))
+          .toList(),
+);
+
+Map<String, dynamic> _$TripsPayloadToJson(TripsPayload instance) =>
+    <String, dynamic>{'trips': instance.trips};
+
+NotificationsPayload _$NotificationsPayloadFromJson(
+  Map<String, dynamic> json,
+) => NotificationsPayload(
+  notifications:
+      (json['notifications'] as List<dynamic>)
+          .map((e) => Notification.fromJson(e as Map<String, dynamic>))
+          .toList(),
+);
+
+Map<String, dynamic> _$NotificationsPayloadToJson(
+  NotificationsPayload instance,
+) => <String, dynamic>{'notifications': instance.notifications};
