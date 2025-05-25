@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:wander_wallet/core/constants/api_constants.dart';
 
@@ -66,26 +68,23 @@ class AuthRemoteDataSource {
     String username,
     String email,
     String password,
+    File? avatar
   ) async {
     print(
       'AuthRemoteDataSource: Making register request to ${ApiConstants.register}',
     );
     try {
+      final formData = FormData.fromMap({
+        'username': username,
+        'email': email,
+        'password': password,
+        'role': 'user', // Default role is user
+        if (avatar != null) 'avatar': await MultipartFile.fromFile(avatar.path, contentType: DioMediaType.parse('image/jpeg')),
+      });
+    
       final res = await dio.post(
         ApiConstants.register,
-        data: {
-          'username': username,
-          'email': email,
-          'password': password,
-          'role': 'user', // Default role is user
-        },
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          validateStatus: (status) => true, // Don't throw on any status code
-        ),
+        data: formData
       );
 
       print(

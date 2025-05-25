@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import '../../domain/auth_repository.dart';
 
 sealed class SignupScreenState {
@@ -16,10 +20,9 @@ class SignupLoading extends SignupScreenState {
 }
 
 class SignupSuccess extends SignupScreenState {
-  final TokenPayload tokenPayload;
-  final String? role;
+  final LoginPayload loginPayload;
 
-  SignupSuccess(this.tokenPayload, {this.role});
+  SignupSuccess(this.loginPayload);
 }
 
 class SignupError extends SignupScreenState {
@@ -36,51 +39,25 @@ class SignupState extends StateNotifier<SignupScreenState> {
 
   String? get role => _role;
 
-  Future<void> signup(String username, String email, String password) async {
-    print("---> signupProvider: signup method called <---");
+  Future<void> signup(String username, String email, String password, File? avatar) async {
     state = SignupLoading();
     try {
-      print("---> signupProvider: Calling authRepository.register <---");
-      final result = await _authRepository.register(username, email, password);
-      print("---> signupProvider: authRepository.register returned <---");
-      print(
-        "---> signupProvider: Result runtimeType: ${result.runtimeType} <---",
-      );
+      final result = await _authRepository.register(username, email, password, avatar);
 
-      if (result is Success<TokenPayload, UserError>) {
-        print("---> signupProvider: Result is Success <---");
-        // Successfully registered. No need to call getProfile here. Redirect to login.
+      if (result is Success<LoginPayload, UserError>) {
         state = SignupSuccess(
-          result.data,
-        ); // Transition to success state immediately
-        print("---> signupProvider: State set to SignupSuccess <---");
-      } else if (result is Error<TokenPayload, UserError>) {
-        print("---> signupProvider: Result is Error <---");
-        // Registration failed with a specific error
-        print(
-          "---> signupProvider: Error message: ${result.error.message} <---",
+          (result as Success).data,
         );
-        state = SignupError(result.error);
-        print("---> signupProvider: State set to SignupError <---");
+      } else if (result is Error<LoginPayload, UserError>) {
+        state = SignupError((result as Error).error);
       } else {
-        print("---> signupProvider: Unexpected Result Type <---");
-        // Handle unexpected result from register
         state = SignupError(
           UserError(message: 'An unexpected result type from register.'),
         );
-        print(
-          "---> signupProvider: State set to SignupError (unexpected type) <---",
-        );
       }
     } catch (e) {
-      print("---> signupProvider: Caught unhandled exception <---");
-      // Catch any other unexpected errors during the process
-      print("---> signupProvider: Exception: ${e.toString()} <---");
       state = SignupError(
         UserError(message: 'An unexpected error occurred: ${e.toString()}'),
-      );
-      print(
-        "---> signupProvider: State set to SignupError (caught exception) <---",
       );
     }
   }

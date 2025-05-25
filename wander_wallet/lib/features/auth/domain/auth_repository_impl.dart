@@ -1,6 +1,9 @@
-import 'package:dio/dio.dart';
-import 'package:wander_wallet/features/auth/data/models.dart';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:wander_wallet/core/models/result.dart';
+import 'package:wander_wallet/core/models/payload.dart';
+import 'package:wander_wallet/core/models/error.dart';
 import 'auth_repository.dart';
 import '../data/auth_remote_data_source.dart';
 import '../../../core/storage/token_storage.dart';
@@ -12,7 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remote, this.storage);
 
   @override
-  Future<Result<TokenPayload, UserError>> login(
+  Future<Result<LoginPayload, UserError>> login(
     String email,
     String password,
   ) async {
@@ -31,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Error(error: UserError(message: res.data['message']));
       }
 
-      final tokenPayload = TokenPayload.fromJson(res.data);
+      final tokenPayload = LoginPayload.fromJson(res.data);
       print(
         'AuthRepositoryImpl: Token payload parsed: accessToken=${tokenPayload.accessToken}, refreshToken=${tokenPayload.refreshToken}',
       );
@@ -110,14 +113,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Result<TokenPayload, UserError>> register(
+  Future<Result<LoginPayload, UserError>> register(
     String username,
     String email,
     String password,
+    File? avatar
   ) async {
     try {
       print('AuthRepositoryImpl: Attempting registration...');
-      final res = await remote.register(username, email, password);
+      final res = await remote.register(username, email, password, avatar);
       print('AuthRepositoryImpl: Register response received: ${res.data}');
 
       if (res.data is! Map<String, dynamic>) {
@@ -137,7 +141,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Error(error: UserError(message: res.data['message']));
       }
 
-      final tokenPayload = TokenPayload.fromJson(res.data);
+      final tokenPayload = LoginPayload.fromJson(res.data);
       print(
         'AuthRepositoryImpl: Token payload parsed: accessToken=${tokenPayload.accessToken}, refreshToken=${tokenPayload.refreshToken}',
       );

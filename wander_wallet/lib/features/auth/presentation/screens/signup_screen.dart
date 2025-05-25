@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:wander_wallet/features/auth/presentation/providers/signup_provider.dart';
-import 'package:wander_wallet/features/dashboard/presentation/screens/user_dashboard.dart';
-import 'package:wander_wallet/features/admin/presentation/screens/admin_dashboard.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'login_screen.dart';
 
@@ -61,24 +59,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       return;
     }
 
-    ref.read(signupProvider.notifier).signup(username, email, password);
-  }
-
-  void _showTermsDialog(String title) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(title),
-            content: Text('This is a placeholder for $title.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-    );
+    ref.read(signupProvider.notifier).signup(username, email, password, _imageFile);
   }
 
   @override
@@ -89,9 +70,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (signupState is SignupSuccess) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          Navigator.pushReplacement(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
+            '/login'
           );
         }
       });
