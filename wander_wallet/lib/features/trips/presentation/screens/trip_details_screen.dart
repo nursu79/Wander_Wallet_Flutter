@@ -14,6 +14,26 @@ class TripDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    ref.listenManual(tripDetailsProvider(widget.id), (prev, next) {
+      next.when(
+        data: (data) {
+          if (data is TripDetailsDeleteSuccess) {
+            Navigator.pushNamed(context, '/trips');
+          }
+        },
+        loading: () {},
+        error: (error, stack) {
+          if (error is TripDetailsError && error.loggedOut) {
+            Navigator.pushNamed(context, '/login');
+          }
+        }
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +41,45 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
 
     return asyncValue.when(
         data: (data) {
-          final tripPayload = (data as TripDetailsSuccess).tripPayload;
+          if (data is TripDetailsDeleteSuccess) {
+            return Center(
+              child: Text('Trip deleted successfully!'),
+            );
+          } else {
+            final tripPayload = (data as TripDetailsSuccess).tripPayload;
 
-          return Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 28,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TripBudgetInfo(budget: tripPayload.trip.budget, expenditure: tripPayload.totalExpenditure),
-                TripExpensesSection(trip: tripPayload.trip, categories: tripPayload.expensesByCategory)
-              ],
-            ),
-          );
+            return Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                spacing: 28,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TripBudgetInfo(budget: tripPayload.trip.budget, expenditure: tripPayload.totalExpenditure!),
+                  Row(
+                    spacing: 16,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RectangularButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/editTrip', arguments: tripPayload.trip.id);
+                        },
+                        text: 'Edit',
+                      ),
+                      RectangularButton(
+                        color: Theme.of(context).colorScheme.error,
+                        textColor: Theme.of(context).colorScheme.onError,
+                        onPressed: () {
+                          ref.read(tripDetailsProvider(widget.id).notifier).deleteTrip();
+                        },
+                        text: 'Delete',
+                      )
+                    ],
+                  ),
+                  TripExpensesSection(trip: tripPayload.trip, categories: tripPayload.expensesByCategory!)
+                ],
+              ),
+            );
+          }
         },
         error: (err, stack) {
           return Center(

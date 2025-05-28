@@ -212,7 +212,7 @@ export default class TripController {
 
         return res.status(200).json({
             trip,
-            totalExpenditure: totalExpenditure._sum.amount,
+            totalExpenditure: totalExpenditure._sum.amount || 0,
             expensesByCategory
         });
     }

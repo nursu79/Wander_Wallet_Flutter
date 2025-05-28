@@ -11,6 +11,7 @@ class ApiConstants {
   static const String admin = '/admin';
 
   // Trip endpoints
+  static const String createTrip = '/trips';
   static const String allTrips = '/trips';
   static const String pastTrips = '/pastTrips';
   static const String currentTrips = '/currentTrips';

@@ -39,12 +39,16 @@ class TripCard extends StatelessWidget {
                 SizedBox(height: 40),
                 Align(
                   alignment: Alignment.center,
-                  child: RectangularButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/tripDetails', arguments: trip.id);
-                    },
-                    text: 'View Details'
-                  )
+                  child: Row(
+                    children: [
+                      RectangularButton(
+                        fillWidth: true,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/tripDetails', arguments: trip.id);
+                        },
+                        text: 'View Details'
+                      )
+                  ])
                 )
               ],
             ),

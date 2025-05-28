@@ -4,7 +4,6 @@ import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/misc.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/core/models/success.dart';
 import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 
 sealed class TripsScreenState {

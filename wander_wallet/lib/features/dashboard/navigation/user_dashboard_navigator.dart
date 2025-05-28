@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wander_wallet/features/trips/presentation/screens/create_trip_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trip_details_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trips_screen.dart';
 
@@ -11,6 +12,8 @@ class UserDashboardNavigator extends StatelessWidget {
       initialRoute: '/trips',
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/createTrip':
+            return MaterialPageRoute(builder: (_) => const CreateTripScreen());
           case '/trips':
             return MaterialPageRoute(builder: (_) => const TripsScreen());
           case '/tripDetails':

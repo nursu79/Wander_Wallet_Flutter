@@ -32,8 +32,8 @@ class LoginPayload {
 @JsonSerializable()
 class TripPayload {
   final Trip trip;
-  final num totalExpenditure;
-  final List<ExpenseByCategory> expensesByCategory;
+  final num? totalExpenditure;
+  final List<ExpenseByCategory>? expensesByCategory;
 
   TripPayload({
     required this.trip,
@@ -64,4 +64,15 @@ class NotificationsPayload {
   });
   factory NotificationsPayload.fromJson(Map<String, dynamic> json) => _$NotificationsPayloadFromJson(json);
   Map<String, dynamic> toJson() => _$NotificationsPayloadToJson(this);
+}
+
+@JsonSerializable()
+class MessagePayload {
+  final String message;
+
+  MessagePayload({
+    required this.message,
+  });
+  factory MessagePayload.fromJson(Map<String, dynamic> json) => _$MessagePayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$MessagePayloadToJson(this);
 }

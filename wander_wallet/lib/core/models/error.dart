@@ -15,6 +15,20 @@ class UserError {
 }
 
 @JsonSerializable()
+class TripError {
+  final String? name;
+  final String? destination;
+  final String? budget;
+  final String? startDate;
+  final String? endDate;
+  final String? message;
+
+  TripError({this.name, this.destination, this.budget, this.startDate, this.endDate, this.message});
+  factory TripError.fromJson(Map<String, dynamic> json) => _$TripErrorFromJson(json);
+  Map<String, dynamic> toJson() => _$TripErrorToJson(this);
+}
+
+@JsonSerializable()
 class MessageError {
   final String message;
 

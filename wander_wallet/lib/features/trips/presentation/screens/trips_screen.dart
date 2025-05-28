@@ -67,6 +67,17 @@ class _TripsScreenState extends ConsumerState<TripsScreen> with SingleTickerProv
               );
             },
           ),
+        ),
+        Container(
+          margin: EdgeInsets.all(16),
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/createTrip');
+            },
+            shape: CircleBorder(),
+            child: const Icon(Icons.add),
+          ),
         )
       ],
     );

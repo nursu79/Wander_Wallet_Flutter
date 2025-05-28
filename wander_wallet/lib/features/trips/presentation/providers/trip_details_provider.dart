@@ -19,6 +19,12 @@ class TripDetailsSuccess extends TripDetailsScreenState {
   TripDetailsSuccess(this.tripPayload);
 }
 
+class TripDetailsDeleteSuccess extends TripDetailsScreenState {
+  final MessagePayload messagePayload;
+
+  TripDetailsDeleteSuccess(this.messagePayload);
+}
+
 class TripDetailsError extends TripDetailsScreenState {
   final MessageError error;
   final bool loggedOut;
@@ -40,6 +46,19 @@ class TripDetailsScreenNotifier extends FamilyAsyncNotifier<TripDetailsScreenSta
       return TripDetailsSuccess((res as Success).data);
     } else {
       return TripDetailsError((res as Error).error, (res as Error).loggedOut);
+    }
+  }
+
+  Future<void> deleteTrip() async {
+    state = AsyncValue.loading();
+    final res = await tripsRepository.deleteTrip(arg);
+    if (res is Success) {
+      state = AsyncValue.data(TripDetailsDeleteSuccess((res as Success).data));
+    } else {
+      state = AsyncValue.error(
+          TripDetailsError((res as Error).error, (res as Error).loggedOut),
+          StackTrace.current
+      );
     }
   }
 

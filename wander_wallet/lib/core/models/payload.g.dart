@@ -30,10 +30,10 @@ Map<String, dynamic> _$LoginPayloadToJson(LoginPayload instance) =>
 
 TripPayload _$TripPayloadFromJson(Map<String, dynamic> json) => TripPayload(
   trip: Trip.fromJson(json['trip'] as Map<String, dynamic>),
-  totalExpenditure: json['totalExpenditure'] as num,
+  totalExpenditure: json['totalExpenditure'] as num?,
   expensesByCategory:
-      (json['expensesByCategory'] as List<dynamic>)
-          .map((e) => ExpenseByCategory.fromJson(e as Map<String, dynamic>))
+      (json['expensesByCategory'] as List<dynamic>?)
+          ?.map((e) => ExpenseByCategory.fromJson(e as Map<String, dynamic>))
           .toList(),
 );
 
@@ -66,3 +66,9 @@ NotificationsPayload _$NotificationsPayloadFromJson(
 Map<String, dynamic> _$NotificationsPayloadToJson(
   NotificationsPayload instance,
 ) => <String, dynamic>{'notifications': instance.notifications};
+
+MessagePayload _$MessagePayloadFromJson(Map<String, dynamic> json) =>
+    MessagePayload(message: json['message'] as String);
+
+Map<String, dynamic> _$MessagePayloadToJson(MessagePayload instance) =>
+    <String, dynamic>{'message': instance.message};
