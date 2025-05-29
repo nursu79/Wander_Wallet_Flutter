@@ -32,7 +32,7 @@ class RectangularButton extends StatelessWidget {
           ),
         ),
         child: isLoading 
-          ? CircularProgressIndicator(color: (textColor != null) ? textColor : Theme.of(context).colorScheme.onPrimary, strokeWidth: 12,) 
+          ? CircularProgressIndicator(color: (textColor != null) ? textColor : Theme.of(context).colorScheme.onPrimary) 
           : Text(
               text,
               style: TextStyle(
@@ -58,7 +58,7 @@ class RectangularButton extends StatelessWidget {
           ),
         ),
         child: isLoading 
-          ? CircularProgressIndicator(color: (textColor != null) ? textColor : Theme.of(context).colorScheme.onPrimary, strokeWidth: 12,) 
+          ? CircularProgressIndicator(color: (textColor != null) ? textColor : Theme.of(context).colorScheme.onPrimary) 
           : Text(
               text,
               style: TextStyle(

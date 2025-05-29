@@ -62,6 +62,32 @@ class TripsRemoteDataSource {
     return res;
   }
 
+  Future<Response<dynamic>> updateTrip(
+    String id,
+    String name,
+    String destination,
+    num budget,
+    DateTime startDate,
+    DateTime endDate,
+    File? tripImage,
+  ) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'destination': destination,
+      'budget': budget,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      if (tripImage != null) 'tripImage': await MultipartFile.fromFile(tripImage.path, contentType: DioMediaType.parse('image/jpeg'))
+    });
+
+    final res = await dio.put(
+      ApiConstants.getTripPath(id),
+      data: formData
+    );
+
+    return res;
+  }
+
   Future<Response<dynamic>> deleteTrip(String id) async {
     final res = await dio.delete(ApiConstants.getTripPath(id));
 

@@ -41,7 +41,6 @@ class TripDetailsScreenNotifier extends FamilyAsyncNotifier<TripDetailsScreenSta
     tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.getTrip(arg);
-    print(res);
     if (res is Success) {
       return TripDetailsSuccess((res as Success).data);
     } else {

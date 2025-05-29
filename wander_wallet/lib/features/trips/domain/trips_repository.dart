@@ -19,4 +19,13 @@ abstract class TripsRepository {
   Future<Result<TripsPayload, MessageError>> getPendingTrips();
   Future<Result<TripPayload, MessageError>> getTrip(String id);
   Future<Result<MessagePayload, MessageError>> deleteTrip(String id);
+  Future<Result<TripPayload, TripError>> updateTrip(
+    String id,
+    String name,
+    String destination,
+    num budget,
+    DateTime startDate,
+    DateTime endDate,
+    File? tripImage,
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/create_trip_screen.dart';
+import 'package:wander_wallet/features/trips/presentation/screens/edit_trip_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trip_details_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trips_screen.dart';
 
@@ -20,6 +21,11 @@ class UserDashboardNavigator extends StatelessWidget {
             return MaterialPageRoute(builder: (_) {
               final tripId = settings.arguments;
               return TripDetailsScreen(id: (tripId as String));
+            });
+          case '/editTrip':
+            return MaterialPageRoute(builder: (_) {
+              final tripId = settings.arguments;
+              return EditTripScreen(id: (tripId as String));
             });
           default:
             return MaterialPageRoute(builder: (_) => const TripsScreen());

@@ -10,7 +10,7 @@ class TripDetailsScreen extends ConsumerStatefulWidget {
 
   const TripDetailsScreen({ super.key, required this.id });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TripDetailsScreenState();
+  ConsumerState<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
 class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {

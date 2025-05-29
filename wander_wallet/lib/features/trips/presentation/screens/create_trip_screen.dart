@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
-import 'package:wander_wallet/core/widgets/form_fields.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/create_trip_provider.dart';
 
 class CreateTripScreen extends ConsumerStatefulWidget {
   const CreateTripScreen({super.key});
 
+  @override
   ConsumerState<CreateTripScreen> createState() => _CreateTripScreenState();
 }
 
@@ -44,12 +44,6 @@ class _CreateTripScreenState extends ConsumerState<CreateTripScreen> {
   void initState() {
     super.initState();
     ref.listenManual(createTripProvider, (prev, next) {
-      print("=================================================");
-      next.when(
-        data: (data) => print("Data: $data"),
-        error: (error, st) => print("Error: $error"),
-        loading: () => print("Loading..."),
-      );
       next.whenData((data) {
         if (data is CreateTripSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -256,7 +250,7 @@ class _CreateTripScreenState extends ConsumerState<CreateTripScreen> {
                             onPressed: () async {
                               final pickedDate = await showDatePicker(
                                 context: context,
-                                initialDate: _startDate ?? DateTime.now(),
+                                initialDate: _endDate ?? DateTime.now(),
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2100)
                               );
