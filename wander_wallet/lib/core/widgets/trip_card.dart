@@ -30,7 +30,7 @@ class TripCard extends StatelessWidget {
                       spacing: 4,
                       children: [
                         Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
-                        Text(trip.destination, style: Theme.of(context).textTheme.labelLarge)
+                        Text(trip.destination.length > 10 ? trip.destination.substring(0, 10) : trip.destination, style: Theme.of(context).textTheme.labelLarge)
                       ],
                     ),
                   ],

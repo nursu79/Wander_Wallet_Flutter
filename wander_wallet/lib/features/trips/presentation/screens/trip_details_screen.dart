@@ -48,35 +48,44 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
           } else {
             final tripPayload = (data as TripDetailsSuccess).tripPayload;
 
-            return Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                spacing: 28,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TripBudgetInfo(budget: tripPayload.trip.budget, expenditure: tripPayload.totalExpenditure!),
-                  Row(
-                    spacing: 16,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RectangularButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/editTrip', arguments: tripPayload.trip.id);
-                        },
-                        text: 'Edit',
-                      ),
-                      RectangularButton(
-                        color: Theme.of(context).colorScheme.error,
-                        textColor: Theme.of(context).colorScheme.onError,
-                        onPressed: () {
-                          ref.read(tripDetailsProvider(widget.id).notifier).deleteTrip();
-                        },
-                        text: 'Delete',
-                      )
-                    ],
-                  ),
-                  TripExpensesSection(trip: tripPayload.trip, categories: tripPayload.expensesByCategory!)
-                ],
+            return Scaffold( 
+              body: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  spacing: 28,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TripBudgetInfo(budget: tripPayload.trip.budget, expenditure: tripPayload.totalExpenditure!),
+                    Row(
+                      spacing: 16,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RectangularButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/editTrip', arguments: tripPayload.trip.id);
+                          },
+                          text: 'Edit',
+                        ),
+                        RectangularButton(
+                          color: Theme.of(context).colorScheme.error,
+                          textColor: Theme.of(context).colorScheme.onError,
+                          onPressed: () {
+                            ref.read(tripDetailsProvider(widget.id).notifier).deleteTrip();
+                          },
+                          text: 'Delete',
+                        )
+                      ],
+                    ),
+                    TripExpensesSection(trip: tripPayload.trip, categories: tripPayload.expensesByCategory!),
+                  ],
+                ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/createExpense');
+                },
+                shape: CircleBorder(),
+                child: const Icon(Icons.add)
               ),
             );
           }

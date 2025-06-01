@@ -33,53 +33,51 @@ class _TripsScreenState extends ConsumerState<TripsScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TabBar(
-          controller: _tabController,
-          tabs: TabType.values.map((type) => Tab(text: type.name.toUpperCase())).toList(),
-          labelColor: Theme.of(context).colorScheme.primary,
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-          unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-          unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
-        Expanded(
-          child:  Consumer(
-            builder: (context, ref, child) {
-              final asyncVal = ref.watch(tripsProvider);
-
-              return asyncVal.when(
-                data: (items) {
-                  final trips = (items as TripsSuccess).trips.trips;
-
-                  if (trips.isEmpty) {
-                    return const Center(child: Text('No items found.'));
-                  }
-                  return ListView.builder(
-                    itemCount: trips.length,
-                    itemBuilder: (context, index) {
-                      return TripCard(trip: trips[index]);
-                    },
-                  );
-                },
-                error: (err, stack) => Center(child: Text((err is TripsError) ? err.messageError.message : err.toString())),
-                loading: () => Center(child: CircularProgressIndicator())
-              );
-            },
+    return Scaffold(
+      body: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            tabs: TabType.values.map((type) => Tab(text: type.name.toUpperCase())).toList(),
+            labelColor: Theme.of(context).colorScheme.primary,
+            labelStyle: Theme.of(context).textTheme.bodyMedium,
+            unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+            unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
           ),
-        ),
-        Container(
-          margin: EdgeInsets.all(16),
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/createTrip');
-            },
-            shape: CircleBorder(),
-            child: const Icon(Icons.add),
-          ),
-        )
-      ],
+          Expanded(
+            child:  Consumer(
+              builder: (context, ref, child) {
+                final asyncVal = ref.watch(tripsProvider);
+
+                return asyncVal.when(
+                  data: (items) {
+                    final trips = (items as TripsSuccess).trips.trips;
+
+                    if (trips.isEmpty) {
+                      return const Center(child: Text('No items found.'));
+                    }
+                    return ListView.builder(
+                      itemCount: trips.length,
+                      itemBuilder: (context, index) {
+                        return TripCard(trip: trips[index]);
+                      },
+                    );
+                  },
+                  error: (err, stack) => Center(child: Text((err is TripsError) ? err.messageError.message : err.toString())),
+                  loading: () => Center(child: CircularProgressIndicator())
+                );
+              },
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/createTrip');
+        },
+        shape: CircleBorder(),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
