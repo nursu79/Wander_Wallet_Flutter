@@ -7,4 +7,35 @@ class ExpensesRemoteDataSource {
 
   ExpensesRemoteDataSource(this.dio);
 
+  Future<Response<dynamic>> createExpense(
+    String tripId,
+    String name,
+    num amount,
+    Category category,
+    DateTime date,
+    String? notes
+  ) async {
+    final res = await dio.post(
+      ApiConstants.getTripExpensePath(tripId),
+      data: {
+        'name': name,
+        'amount': amount,
+        'category': category.name,
+        'date': date.toIso8601String()
+      }
+    );
+
+    return res;
+  }
+
+  Future<Response<dynamic>> getExpense(
+    String id
+  ) async {
+    final res = await dio.get(
+      ApiConstants.getExpensePath(id)
+    );
+
+    return res;
+  }
+
 }
