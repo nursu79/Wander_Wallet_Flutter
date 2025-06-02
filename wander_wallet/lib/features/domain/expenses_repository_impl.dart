@@ -55,4 +55,26 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
     }
   }
 
+  @override
+  Future<Result<ExpensePayload, MessageError>> getExpense(String id) async {
+    try {
+      final res = await remote.getExpense(id);
+      final expensePayload = ExpensePayload.fromJson(res.data);
+      return Success(expensePayload);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final messageError = MessageError.fromJson(e.response?.data);
+        return Error(error: messageError, loggedOut: e.response?.statusCode == 401);
+      } else {
+        return Error(
+          error: MessageError(message: 'Please check your internet connection and/or api address'),
+          loggedOut: false,
+        );
+      }
+    } on Exception {
+      final messageError = MessageError(message: 'An unexpected error occurred');
+      return Error(error: messageError);
+    }
+  }
+
 }
