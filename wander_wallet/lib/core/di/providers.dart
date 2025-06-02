@@ -4,6 +4,9 @@ import 'package:wander_wallet/core/constants/constants.dart';
 import 'package:wander_wallet/features/auth/data/auth_remote_data_source.dart';
 import 'package:wander_wallet/features/auth/domain/auth_repository.dart';
 import 'package:wander_wallet/features/auth/domain/auth_repository_impl.dart';
+import 'package:wander_wallet/features/expenses/data/expenses_remote_data_source.dart';
+import 'package:wander_wallet/features/expenses/domain/expenses_repository.dart';
+import 'package:wander_wallet/features/expenses/domain/expenses_repository_impl.dart';
 import 'package:wander_wallet/features/trips/data/trips_remote_data_source.dart';
 import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 import 'package:wander_wallet/features/trips/domain/trips_repository_impl.dart';
@@ -52,5 +55,17 @@ final tripsRemoteDataSourceProvider = Provider<TripsRemoteDataSource>((ref) {
 final tripsRepositoryProvider = Provider<TripsRepository>((ref) {
   return TripsRepositoryImpl(
     ref.read(tripsRemoteDataSourceProvider)
+  );
+});
+
+final expensesRemoteDataSourceProvider = Provider<ExpensesRemoteDataSource>((ref) {
+  return ExpensesRemoteDataSource(
+    ref.read(dioProvider)
+  );
+});
+
+final expensesRepositoryProvider = Provider<ExpensesRepository>((ref) {
+  return ExpensesRepositoryImpl(
+    ref.read(expensesRemoteDataSourceProvider)
   );
 });

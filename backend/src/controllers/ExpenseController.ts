@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getUser } from "../utils/index.js";
 import prisma from "../dbClient.js";
 
-const categoryList = ["FOOD", "TRANSPORTATION", "ACCOMMODATION", "EXTERTAINMENT", "SHOPPING", "OTHER"]
+const categoryList = ["FOOD", "TRANSPORTATION", "ACCOMMODATION", "ENTERTAINMENT", "SHOPPING", "OTHER"]
 
 export default class ExpenseController {
     static async createExpense(req: Request, res: Response) {

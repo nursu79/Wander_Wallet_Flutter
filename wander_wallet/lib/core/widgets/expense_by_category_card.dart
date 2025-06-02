@@ -10,7 +10,7 @@ class ExpenseByCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 16),
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
         onTap: () {
           _showCategoryExpenses(context, category.category);
@@ -72,21 +72,26 @@ class ExpenseByCategoryCard extends StatelessWidget {
                 spacing: 12,
                 children: getExpensesByCategory(expenses, category).map((expense) {
                   return Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(expense.name, style: Theme.of(context).textTheme.bodyLarge),
-                              Text('\$${expense.amount}', style: Theme.of(context).textTheme.bodyLarge)
-                            ],
-                          ),
-                          Divider()
-                        ]
-                      )
-                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/expenseDetails', arguments: { 'tripId': expense.tripId, 'id': expense.id });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(expense.name, style: Theme.of(context).textTheme.bodyLarge),
+                                Text('\$${expense.amount}', style: Theme.of(context).textTheme.bodyLarge)
+                              ],
+                            ),
+                            Divider()
+                          ]
+                        )
+                      ),
+                    )
                   );
                 }).toList(),
               )

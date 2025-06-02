@@ -19,4 +19,12 @@ class ApiConstants {
   static String getTripPath(String id) {
     return '/trips/$id';
   }
+
+  // Expenses
+  static String getExpensePath(String id) {
+    return '/expenses/$id';
+  }
+  static String getTripExpensePath(String tripId) {
+    return '/trips/$tripId/expenses';
+  }
 }
