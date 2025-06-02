@@ -54,7 +54,7 @@ class EditTripScreenNotifier extends FamilyAsyncNotifier<EditTripScreenState, St
     if (res is Success) {
       return EditTripGetSuccess((res as Success).data);
     } else {
-      return EditTripGetError((res as Error).error, (res as Error).loggedOut);
+      throw EditTripGetError((res as Error).error, (res as Error).loggedOut);
     }
   }
 

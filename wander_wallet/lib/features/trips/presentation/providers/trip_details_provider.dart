@@ -3,7 +3,6 @@ import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 
 sealed class TripDetailsScreenState {
   TripDetailsScreenState();
@@ -32,23 +31,24 @@ class TripDetailsError extends TripDetailsScreenState {
   TripDetailsError(this.error, this.loggedOut);
 }
 
-class TripDetailsScreenNotifier extends FamilyAsyncNotifier<TripDetailsScreenState, String> {
-  late final TripsRepository tripsRepository;
+class TripDetailsScreenNotifier extends AutoDisposeFamilyAsyncNotifier<TripDetailsScreenState, String> {
 
   TripDetailsScreenNotifier();
   @override
   Future<TripDetailsScreenState> build(String id) async {
-    tripsRepository = ref.read(tripsRepositoryProvider);
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.getTrip(arg);
     if (res is Success) {
       return TripDetailsSuccess((res as Success).data);
     } else {
-      return TripDetailsError((res as Error).error, (res as Error).loggedOut);
+      throw TripDetailsError((res as Error).error, (res as Error).loggedOut);
     }
   }
 
   Future<void> deleteTrip() async {
+    final tripsRepository = ref.read(tripsRepositoryProvider);
+
     state = AsyncValue.loading();
     final res = await tripsRepository.deleteTrip(arg);
     if (res is Success) {
@@ -62,6 +62,8 @@ class TripDetailsScreenNotifier extends FamilyAsyncNotifier<TripDetailsScreenSta
   }
 
   Future<void> refresh() async {
+    final tripsRepository = ref.read(tripsRepositoryProvider);
+
     state = AsyncValue.loading();
     final res = await tripsRepository.getTrip(arg);
     if (res is Success) {
@@ -76,6 +78,7 @@ class TripDetailsScreenNotifier extends FamilyAsyncNotifier<TripDetailsScreenSta
 }
 
 final tripDetailsProvider = AsyncNotifierProvider
-    .family<TripDetailsScreenNotifier, TripDetailsScreenState, String>(
+    .family
+    .autoDispose<TripDetailsScreenNotifier, TripDetailsScreenState, String>(
   TripDetailsScreenNotifier.new
 );

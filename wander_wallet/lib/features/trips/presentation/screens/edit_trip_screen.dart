@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/edit_trip_provider.dart';
+import 'package:wander_wallet/features/trips/presentation/providers/trip_details_provider.dart';
 
 class EditTripScreen extends ConsumerStatefulWidget {
   final String id;
@@ -41,7 +42,8 @@ class _EditTripScreenState extends ConsumerState<EditTripScreen> {
             _startDate = trip.startDate;
             _endDate = trip.endDate;
           } else if (data is EditTripUpdateSuccess) {
-            Navigator.pushNamedAndRemoveUntil(context, '/tripDetails', arguments: widget.id, (Route route) => false);
+            ref.invalidate(tripDetailsProvider(widget.id));
+            Navigator.pushNamed(context, '/tripDetails', arguments: widget.id);
           }
         },
         error: (error, _) {

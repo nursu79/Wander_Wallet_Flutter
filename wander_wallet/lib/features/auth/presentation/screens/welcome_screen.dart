@@ -58,35 +58,48 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Center(
-                  child: Column(
-                    children: [
-                      RectangularButton(
-                        text: 'Get Started',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const SignupScreen(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            RectangularButton(
+                              text: 'Get Started',
+                              fillWidth: true,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SignupScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      RectangularButton(
-                        text: 'Sign in',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
+                          ]
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            RectangularButton(
+                              text: 'Sign in',
+                              fillWidth: true,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const LoginScreen(),
+                                  ),
+                                );
+                              },
+                              color: theme.colorScheme.surface,
+                              textColor: theme.colorScheme.primary,
                             ),
-                          );
-                        },
-                        color: theme.colorScheme.surface,
-                        textColor: theme.colorScheme.primary,
-                      ),
-                    ],
-                  ),
+                          ]
+                        )
+                      ],
+                    ),
+                  )
                 ),
                 const SizedBox(height: 32),
               ],
