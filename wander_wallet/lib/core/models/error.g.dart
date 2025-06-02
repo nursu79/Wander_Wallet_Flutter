@@ -38,6 +38,23 @@ Map<String, dynamic> _$TripErrorToJson(TripError instance) => <String, dynamic>{
   'message': instance.message,
 };
 
+ExpenseError _$ExpenseErrorFromJson(Map<String, dynamic> json) => ExpenseError(
+  name: json['name'] as String?,
+  amount: json['amount'] as String?,
+  category: json['category'] as String?,
+  date: json['date'] as String?,
+  message: json['message'] as String?,
+);
+
+Map<String, dynamic> _$ExpenseErrorToJson(ExpenseError instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'amount': instance.amount,
+      'category': instance.category,
+      'date': instance.date,
+      'message': instance.message,
+    };
+
 MessageError _$MessageErrorFromJson(Map<String, dynamic> json) =>
     MessageError(message: json['message'] as String);
 

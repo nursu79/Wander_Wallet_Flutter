@@ -54,6 +54,14 @@ TripsPayload _$TripsPayloadFromJson(Map<String, dynamic> json) => TripsPayload(
 Map<String, dynamic> _$TripsPayloadToJson(TripsPayload instance) =>
     <String, dynamic>{'trips': instance.trips};
 
+ExpensePayload _$ExpensePayloadFromJson(Map<String, dynamic> json) =>
+    ExpensePayload(
+      expense: Expense.fromJson(json['expense'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$ExpensePayloadToJson(ExpensePayload instance) =>
+    <String, dynamic>{'expense': instance.expense};
+
 NotificationsPayload _$NotificationsPayloadFromJson(
   Map<String, dynamic> json,
 ) => NotificationsPayload(
