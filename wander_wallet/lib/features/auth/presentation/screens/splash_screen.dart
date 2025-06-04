@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/splash_provider.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 
@@ -11,20 +12,11 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Add a timeout to prevent infinite loading
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        ref.read(splashProvider.notifier).refresh();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final splashState = ref.watch(splashProvider);
+    final theme = Theme.of(context);
 
     return splashState.when(
       data: (state) {
@@ -58,7 +50,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       },
       loading:
           () => Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: theme.colorScheme.primary,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -77,14 +69,44 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
           ),
       error: (error, stack) {
-        // Navigate to welcome screen on error
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        if (error is SplashError && error.loggedOut) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+            );
+          });
+          return SizedBox.shrink();
+        } else {
+          return Scaffold(
+            backgroundColor: theme.colorScheme.primary,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/wander_wallet_hero.png',
+                    width: 150,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 24),
+                  Text((error as SplashError).messageError.message, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary
+                  )),
+                  const SizedBox(height: 12,),
+                  RectangularButton(
+                    onPressed: () {
+                      ref.read(splashProvider.notifier).refresh();
+                    },
+                    text: 'Retry',
+                    color: theme.colorScheme.onPrimary,
+                    textColor: theme.colorScheme.primary,
+                  )
+                ],
+              ),
+            ),
           );
-        });
-        return const SizedBox.shrink();
+        }
       },
     );
   }

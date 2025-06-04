@@ -3,7 +3,6 @@ import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/features/expenses/domain/expenses_repository.dart';
 
 sealed class ExpenseDetailsScreenState {
   ExpenseDetailsScreenState();

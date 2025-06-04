@@ -3,18 +3,9 @@ import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/result.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/error.dart';
-import '../../domain/auth_repository.dart';
 
 sealed class SplashState {
   SplashState();
-}
-
-class SplashWaiting extends SplashState {
-  SplashWaiting();
-}
-
-class SplashLoading extends SplashState {
-  SplashLoading();
 }
 
 class SplashSuccess extends SplashState {
@@ -27,39 +18,42 @@ class SplashSuccess extends SplashState {
 
 class SplashError extends SplashState {
   final MessageError messageError;
+  final bool loggedOut;
 
-  SplashError(this.messageError);
+  SplashError(this.messageError, this.loggedOut);
 }
 
-class SplashNotifier extends StateNotifier<AsyncValue<SplashState>> {
-  final AuthRepository _authRepository;
+class SplashNotifier extends AsyncNotifier<SplashState> {
+  SplashNotifier();
 
-  SplashNotifier(this._authRepository) : super(const AsyncValue.loading()) {
-    checkAuth();
-  }
-
-  Future<void> checkAuth() async {
-    try {
-      final result = await _authRepository.getProfile();
-      if (result is Success<UserPayload, MessageError>) {
-        state = AsyncValue.data(SplashSuccess((result as Success).data));
-      } else if (result is Error<UserPayload, MessageError>) {
-        state = AsyncValue.data(SplashError((result as Error).error));
-      }
-    } catch (e) {
-      state = AsyncValue.data(
-        SplashError(MessageError(message: 'Not authenticated')),
-      );
+  @override
+  Future<SplashState> build() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    state = AsyncValue.loading();
+    final res = await authRepository.getProfile();
+    if (res is Success<UserPayload, MessageError>) {
+      return SplashSuccess(res.data);
+    } else {
+      throw SplashError((res as Error).error, (res as Error).loggedOut);
     }
   }
 
   Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    await checkAuth();
+    final authRepository = ref.read(authRepositoryProvider);
+    state = AsyncValue.loading();
+    final res = await authRepository.getProfile();
+    if (res is Success<UserPayload, MessageError>) {
+      state = AsyncValue.data(SplashSuccess(res.data));
+    } else {
+      state = AsyncValue.error(
+        SplashError((res as Error).error, (res as Error).loggedOut),
+        StackTrace.current
+      );
+    }
   }
 }
 
 final splashProvider =
-    StateNotifierProvider<SplashNotifier, AsyncValue<SplashState>>((ref) {
-      return SplashNotifier(ref.read(authRepositoryProvider));
-    });
+    AsyncNotifierProvider<SplashNotifier, SplashState>(
+      SplashNotifier.new
+    );
