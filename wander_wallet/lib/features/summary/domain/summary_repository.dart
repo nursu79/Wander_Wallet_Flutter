@@ -1,4 +1,3 @@
-import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
 import 'package:wander_wallet/core/models/success.dart';
 import 'package:wander_wallet/core/models/error.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/core/models/success.dart';
-import 'package:wander_wallet/core/widgets/custom_app_bar.dart';
 import 'package:wander_wallet/core/widgets/notification_card.dart';
 import 'package:wander_wallet/features/notifications/presentation/providers/notifications_provider.dart';
 

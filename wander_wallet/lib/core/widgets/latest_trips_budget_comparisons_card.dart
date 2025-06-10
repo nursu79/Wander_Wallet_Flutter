@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/flutter_percent_indicator.dart';
 import 'package:wander_wallet/core/models/success.dart';
 import 'package:wander_wallet/core/widgets/trip_summary_card.dart';
 

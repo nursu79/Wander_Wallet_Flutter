@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/login_provider.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
-import 'signup_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:wander_wallet/core/models/success.dart';
 import 'package:wander_wallet/core/utils/util_funcs.dart';
 
 class SpendingByMonthCard extends StatelessWidget {

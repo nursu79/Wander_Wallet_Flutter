@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/misc.dart';
 import 'package:wander_wallet/core/widgets/trip_card.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/trips_provider.dart';

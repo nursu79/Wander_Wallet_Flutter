@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wander_wallet/features/admin/presentation/screens/admin_dashboard.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/login_screen.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/main_content_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/splash_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/signup_screen.dart';

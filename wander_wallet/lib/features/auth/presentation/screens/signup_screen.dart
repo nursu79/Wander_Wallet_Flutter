@@ -264,11 +264,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
+                            '/login',
                           );
                         },
                         child: Text(
