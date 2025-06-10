@@ -170,7 +170,7 @@ export default class StatsController {
             tripId: trip.id,
             name: trip.name,
             budget: trip.budget,
-            expenditure: (trip.expenses.reduce((prev, curr) => ({ amount:  prev.amount + curr.amount}))).amount
+            expenditure: trip.expenses.length > 0 ? (trip.expenses.reduce((prev, curr) => ({ amount:  prev.amount + curr.amount}))).amount : 0
         }));
 
         return res.status(200).json({

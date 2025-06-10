@@ -44,6 +44,18 @@ Map<String, dynamic> _$TripPayloadToJson(TripPayload instance) =>
       'expensesByCategory': instance.expensesByCategory,
     };
 
+ConciseTripPayload _$ConciseTripPayloadFromJson(Map<String, dynamic> json) =>
+    ConciseTripPayload(
+      trip: ConciseTrip.fromJson(json['trip'] as Map<String, dynamic>),
+      totalExpenditure: json['totalExpenditure'] as num?,
+    );
+
+Map<String, dynamic> _$ConciseTripPayloadToJson(ConciseTripPayload instance) =>
+    <String, dynamic>{
+      'trip': instance.trip,
+      'totalExpenditure': instance.totalExpenditure,
+    };
+
 TripsPayload _$TripsPayloadFromJson(Map<String, dynamic> json) => TripsPayload(
   trips:
       (json['trips'] as List<dynamic>)
@@ -67,7 +79,7 @@ NotificationsPayload _$NotificationsPayloadFromJson(
 ) => NotificationsPayload(
   notifications:
       (json['notifications'] as List<dynamic>)
-          .map((e) => Notification.fromJson(e as Map<String, dynamic>))
+          .map((e) => TripNotification.fromJson(e as Map<String, dynamic>))
           .toList(),
 );
 

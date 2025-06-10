@@ -45,6 +45,20 @@ class TripPayload {
 }
 
 @JsonSerializable()
+class ConciseTripPayload {
+  final ConciseTrip trip;
+  final num? totalExpenditure;
+
+  ConciseTripPayload({
+    required this.trip,
+    required this.totalExpenditure
+  });
+
+  factory ConciseTripPayload.fromJson(Map<String, dynamic> json) => _$ConciseTripPayloadFromJson(json);
+  Map<String, dynamic> toJson() => _$ConciseTripPayloadToJson(this);
+}
+
+@JsonSerializable()
 class TripsPayload {
   final List<Trip> trips;
 
@@ -67,7 +81,7 @@ class ExpensePayload {
 
 @JsonSerializable()
 class NotificationsPayload {
-  final List<Notification> notifications;
+  final List<TripNotification> notifications;
 
   NotificationsPayload({
     required this.notifications,

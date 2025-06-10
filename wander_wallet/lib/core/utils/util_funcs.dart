@@ -1,4 +1,6 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 import '../models/success.dart';
 
@@ -24,4 +26,15 @@ List<Expense> getExpensesByCategory(List<Expense> expenses, Category category) {
   return expenses.where((expense) {
     return (expense.category == category);
   }).toList();
+}
+
+List<FlSpot> getFlSpots(List<Map<String, num>> data) {
+  final List<FlSpot> amounts = [];
+
+  amounts.add(FlSpot(0, 0));
+  data.forEachIndexed((index, item) {
+    amounts.add(FlSpot((index + 1).toDouble(), item.values.first.toDouble()));
+  });
+
+  return amounts;
 }
