@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wander_wallet/core/di/providers.dart';
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends ConsumerWidget {
   const BottomNavBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final innerNavigator = ref.watch(innerNavigatorKeyProvider);
     return BottomAppBar(
       padding: EdgeInsets.all(0),
       height: 60,
@@ -21,19 +24,19 @@ class BottomNavBar extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.person, color: Theme.of(context).colorScheme.onPrimary),
               onPressed: () {
-                Navigator.pushNamed(context, '/profile');
+                innerNavigator.currentState?.pushNamed('/profile');
               },
             ),
             IconButton(
               icon: Icon(Icons.home, color: Theme.of(context).colorScheme.onPrimary),
               onPressed: () {
-                Navigator.pushNamed(context, '/home');
+                innerNavigator.currentState?.pushNamed('/trips');
               },
             ),
             IconButton(
               icon: Icon(Icons.line_axis, color: Theme.of(context).colorScheme.onPrimary),
               onPressed: () {
-                Navigator.pushNamed(context, '/summary');
+                innerNavigator.currentState?.pushNamed('/summary');
               },
             )
           ],

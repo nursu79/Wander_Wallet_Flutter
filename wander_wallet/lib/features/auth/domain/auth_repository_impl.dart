@@ -73,6 +73,8 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       print('AuthRepositoryImpl: Attempting to get profile...');
       final res = await remote.getProfile();
+      print('==================================');
+      print(res);
       print('AuthRepositoryImpl: Profile response received: ${res.data}');
 
       if (res.data is! Map<String, dynamic>) {
@@ -99,7 +101,7 @@ class AuthRepositoryImpl implements AuthRepository {
         }
       } else {
         final messageError = MessageError(
-          message: 'Please check your internet connection and/or api address',
+          message: 'Please check your internet connection and/or api address (in lib/core/constants/constants.dart) and make sure backend is running',
         );
         return Error(error: messageError);
       }

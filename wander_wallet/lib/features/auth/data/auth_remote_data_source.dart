@@ -48,8 +48,7 @@ class AuthRemoteDataSource {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-          },
-          validateStatus: (status) => true, // Don't throw on any status code
+          }, // Don't throw on any status code
         ),
       );
 

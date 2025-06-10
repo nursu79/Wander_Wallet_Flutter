@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/constants/constants.dart';
 import 'package:wander_wallet/features/auth/data/auth_remote_data_source.dart';
@@ -7,6 +8,12 @@ import 'package:wander_wallet/features/auth/domain/auth_repository_impl.dart';
 import 'package:wander_wallet/features/expenses/data/expenses_remote_data_source.dart';
 import 'package:wander_wallet/features/expenses/domain/expenses_repository.dart';
 import 'package:wander_wallet/features/expenses/domain/expenses_repository_impl.dart';
+import 'package:wander_wallet/features/notifications/data/notifications_remote_data_source.dart';
+import 'package:wander_wallet/features/notifications/domain/notifications_repository.dart';
+import 'package:wander_wallet/features/notifications/domain/notifications_repository_impl.dart';
+import 'package:wander_wallet/features/summary/data/summary_remote_data_source.dart';
+import 'package:wander_wallet/features/summary/domain/summary_repository.dart';
+import 'package:wander_wallet/features/summary/domain/summary_repository_impl.dart';
 import 'package:wander_wallet/features/trips/data/trips_remote_data_source.dart';
 import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 import 'package:wander_wallet/features/trips/domain/trips_repository_impl.dart';
@@ -68,4 +75,34 @@ final expensesRepositoryProvider = Provider<ExpensesRepository>((ref) {
   return ExpensesRepositoryImpl(
     ref.read(expensesRemoteDataSourceProvider)
   );
+});
+
+final notificationsRemoteDataSourceProvider = Provider<NotificationsRemoteDataSource>((ref) {
+  return NotificationsRemoteDataSource(
+    ref.read(dioProvider)
+  );
+});
+
+final notificationsRepositoryProvider = Provider<NotificationsRepository>((ref) {
+  return NotificationsRepositoryImpl(
+    ref.read(notificationsRemoteDataSourceProvider)
+  );
+});
+
+final summaryRemoteDataSourceProvider = Provider<SummaryRemoteDataSource>((ref) {
+  return SummaryRemoteDataSource(
+    ref.read(dioProvider)
+  );
+});
+
+final summaryRepositoryProvider = Provider<SummaryRepository>((ref) {
+  return SummaryRepositoryImpl(
+    ref.read(summaryRemoteDataSourceProvider)
+  );
+});
+
+final screenTitleProvider = StateProvider<String>((ref) => 'Trips');
+
+final innerNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
+  return GlobalKey<NavigatorState>();
 });

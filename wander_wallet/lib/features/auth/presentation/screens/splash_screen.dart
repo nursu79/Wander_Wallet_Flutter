@@ -12,6 +12,32 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(splashProvider, (prev, next) {
+      next.when(
+        data: (data) {
+          if (data is SplashSuccess && data.isAuthenticated) {
+            if (data.userPayload.user.role == 'admin') {
+              Navigator.pushNamed(context, '/admin_dashboard');
+            } else {
+              print("called");
+              Navigator.pushNamed(context, '/user_dashboard');
+            }
+          } else {
+            Navigator.pushNamed(context, '/welcome');
+          }
+        },
+        error: (error, _) {
+          if (error is SplashError && error.loggedOut) {
+            Navigator.pushNamed(context, '/welcome');
+          }
+        },
+        loading: () {}
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,33 +45,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final theme = Theme.of(context);
 
     return splashState.when(
-      data: (state) {
-        if (state is SplashSuccess && state.isAuthenticated) {
-          if (state.userPayload.user.role == 'admin') {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(
-                context,
-                '/admin_dashboard',
-              );
-            });
-          }
-          else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(
-                context,
-                '/user_dashboard',
-              );
-            });
-          }
-        } else {
-          // Navigate to welcome screen for non-authenticated users
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushNamed(
-              context,
-              '/welcome'
-            );
-          });
-        }
+      data: (_) {
         return const SizedBox.shrink();
       },
       loading:
@@ -70,12 +70,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           ),
       error: (error, stack) {
         if (error is SplashError && error.loggedOut) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-            );
-          });
           return SizedBox.shrink();
         } else {
           return Scaffold(

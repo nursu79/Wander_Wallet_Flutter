@@ -6,6 +6,7 @@ import 'package:wander_wallet/features/auth/presentation/screens/splash_screen.d
 import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:wander_wallet/features/auth/presentation/screens/signup_screen.dart';
 import 'package:wander_wallet/features/dashboard/presentation/screens/user_dashboard.dart';
+import 'package:wander_wallet/features/notifications/presentation/screens/notifications_screen.dart';
 
 class AuthNavigator extends StatelessWidget {
   const AuthNavigator({super.key});
@@ -25,8 +26,8 @@ class AuthNavigator extends StatelessWidget {
           case '/welcome':
             return MaterialPageRoute(builder: (_) => WelcomeScreen());
           
-          case '/main':
-            return MaterialPageRoute(builder: (_) => MainContentScreen());
+          // case '/main':
+          //   return MaterialPageRoute(builder: (_) => MainContentScreen());
 
           case '/signup':
             return MaterialPageRoute(builder: (_) => SignupScreen());
@@ -36,6 +37,9 @@ class AuthNavigator extends StatelessWidget {
           
           case '/admin_dashboard':
             return MaterialPageRoute(builder: (_) => AdminDashboard());
+
+          case '/notifications':
+            return MaterialPageRoute(builder: (_) => NotificationsScreen());
 
           default:
             return MaterialPageRoute(builder: (_) => SplashScreen());

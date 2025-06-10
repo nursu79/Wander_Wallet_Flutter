@@ -5,7 +5,6 @@ class ApiConstants {
   static const String profile = '/profile';
   static const String refreshToken = '/token';
   static const String logout = '/logout';
-  static const String notifications = '/notifications';
 
   // Admin endpoints
   static const String admin = '/admin';
@@ -20,11 +19,27 @@ class ApiConstants {
     return '/trips/$id';
   }
 
-  // Expenses
+  // Expense endpoints
   static String getExpensePath(String id) {
     return '/expenses/$id';
   }
   static String getTripExpensePath(String tripId) {
     return '/trips/$tripId/expenses';
   }
+
+  // Notifications endpoints
+  static const String notifications = '/notifications';
+  static String getNotificationPath(String id) {
+    return '/notifications/$id';
+  }
+
+  // Summary endpoints
+  static const String getTotalSpending = '/stats/totalSpending';
+  static const String getAvgSpendingPerTrip = '/stats/avgSpendingPerTrip';
+  static const String getAvgSpendingPerDay = '/stats/avgSpendingPerDay';
+  static const String getSpendingByCategory = '/stats/spendingByCategory';
+  static const String getSpendingByMonth = '/stats/spendingByMonth';
+  static const String getBudgetComparison = '/stats/budgetComparison';
+  static const String getMostExpensiveTrip = '/stats/mostExpensiveTrip';
+  static const String getLeastExpensiveTrip = '/stats/leastExpensiveTrip';
 }
