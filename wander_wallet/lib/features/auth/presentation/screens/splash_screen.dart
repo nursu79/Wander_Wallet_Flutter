@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/auth/presentation/providers/splash_provider.dart';
-import 'package:wander_wallet/features/auth/presentation/screens/welcome_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -22,7 +21,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             if (data.userPayload.user.role == 'admin') {
               Navigator.pushNamed(context, '/admin_dashboard');
             } else {
-              print("called");
               Navigator.pushNamed(context, '/user_dashboard');
             }
           } else {

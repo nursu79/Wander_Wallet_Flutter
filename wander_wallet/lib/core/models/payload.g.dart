@@ -10,7 +10,7 @@ UserPayload _$UserPayloadFromJson(Map<String, dynamic> json) =>
     UserPayload(user: User.fromJson(json['user'] as Map<String, dynamic>));
 
 Map<String, dynamic> _$UserPayloadToJson(UserPayload instance) =>
-    <String, dynamic>{'user': instance.user};
+    <String, dynamic>{'user': instance.user.toJson()};
 
 LoginPayload _$LoginPayloadFromJson(Map<String, dynamic> json) => LoginPayload(
   accessToken: json['accessToken'] as String,
@@ -39,7 +39,7 @@ TripPayload _$TripPayloadFromJson(Map<String, dynamic> json) => TripPayload(
 
 Map<String, dynamic> _$TripPayloadToJson(TripPayload instance) =>
     <String, dynamic>{
-      'trip': instance.trip,
+      'trip': instance.trip.toJson(),
       'totalExpenditure': instance.totalExpenditure,
       'expensesByCategory': instance.expensesByCategory,
     };
@@ -52,7 +52,7 @@ ConciseTripPayload _$ConciseTripPayloadFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ConciseTripPayloadToJson(ConciseTripPayload instance) =>
     <String, dynamic>{
-      'trip': instance.trip,
+      'trip': instance.trip.toJson(),
       'totalExpenditure': instance.totalExpenditure,
     };
 
@@ -64,7 +64,7 @@ TripsPayload _$TripsPayloadFromJson(Map<String, dynamic> json) => TripsPayload(
 );
 
 Map<String, dynamic> _$TripsPayloadToJson(TripsPayload instance) =>
-    <String, dynamic>{'trips': instance.trips};
+    <String, dynamic>{'trips': instance.trips.map((trip) => trip.toJson()).toList()};
 
 ExpensePayload _$ExpensePayloadFromJson(Map<String, dynamic> json) =>
     ExpensePayload(
@@ -72,7 +72,7 @@ ExpensePayload _$ExpensePayloadFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$ExpensePayloadToJson(ExpensePayload instance) =>
-    <String, dynamic>{'expense': instance.expense};
+    <String, dynamic>{'expense': instance.expense.toJson()};
 
 NotificationsPayload _$NotificationsPayloadFromJson(
   Map<String, dynamic> json,
@@ -85,7 +85,7 @@ NotificationsPayload _$NotificationsPayloadFromJson(
 
 Map<String, dynamic> _$NotificationsPayloadToJson(
   NotificationsPayload instance,
-) => <String, dynamic>{'notifications': instance.notifications};
+) => <String, dynamic>{'notifications': instance.notifications.map((not) => not.toJson()).toList()};
 
 MessagePayload _$MessagePayloadFromJson(Map<String, dynamic> json) =>
     MessagePayload(message: json['message'] as String);
