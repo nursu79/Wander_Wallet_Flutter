@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/edit_trip_provider.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/trip_details_provider.dart';

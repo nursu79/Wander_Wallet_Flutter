@@ -39,7 +39,9 @@ class _UserDashboardState extends ConsumerState<UserDashboard> {
     return state.when(
       data: (data) {
         return Scaffold(
-          appBar: CustomAppBar(user: (data as UserDashBoardSuccess).userPayload.user),
+          appBar: CustomAppBar(
+            user: (data as UserDashBoardSuccess).userPayload.user,
+          ),
           bottomNavigationBar: BottomNavBar(),
           body: UserDashboardNavigator()
         );

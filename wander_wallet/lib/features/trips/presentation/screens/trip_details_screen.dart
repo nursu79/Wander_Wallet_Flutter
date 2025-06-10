@@ -17,6 +17,7 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
   @override
   void initState() {
     super.initState();
+
     ref.listenManual(tripDetailsProvider(widget.id), (prev, next) {
       next.when(
         data: (data) {

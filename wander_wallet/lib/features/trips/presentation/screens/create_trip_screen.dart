@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/trips/presentation/providers/create_trip_provider.dart';
 
@@ -43,6 +44,7 @@ class _CreateTripScreenState extends ConsumerState<CreateTripScreen> {
   @override
   void initState() {
     super.initState();
+
     ref.listenManual(createTripProvider, (prev, next) {
       next.whenData((data) {
         if (data is CreateTripSuccess) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/core/widgets/expense_info.dart';
 import 'package:wander_wallet/features/expenses/presentation/providers/edit_expense_provider.dart';

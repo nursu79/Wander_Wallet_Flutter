@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/success.dart';
 import 'package:wander_wallet/core/widgets/buttons.dart';
 import 'package:wander_wallet/features/expenses/presentation/providers/create_expense_provider.dart';
@@ -32,6 +33,7 @@ class _CreateExpenseScreenState extends ConsumerState<CreateExpenseScreen> {
   @override
   void initState() {
     super.initState();
+
     ref.listenManual(createExpenseProvider(widget.tripId), (prev, next) {
       next.whenData((data) {
         if (data is CreateExpenseSuccess) {
