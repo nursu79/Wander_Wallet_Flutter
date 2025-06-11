@@ -22,7 +22,7 @@ class TotalSpendingCard extends StatelessWidget {
             Center(
               child: CircularPercentIndicator(
                 radius: 80,
-                percent: percent,
+                percent: percent <= 1 ? percent : 1,
                 lineWidth: 10,
                 center: Text("${(percent * 100).toInt().toString()}%"),
                 progressColor: theme.colorScheme.primary,

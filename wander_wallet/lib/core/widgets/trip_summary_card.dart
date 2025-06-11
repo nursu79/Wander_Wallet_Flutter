@@ -26,7 +26,7 @@ class TripSummaryCard extends StatelessWidget {
               Text(name, style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.primary)),
               CircularPercentIndicator(
                 radius: 60,
-                percent: percent,
+                percent: percent <= 1 ? percent : 1,
                 center: Text("${(percent * 100).toInt()}%"),
                 progressColor: theme.colorScheme.primary,
               )
