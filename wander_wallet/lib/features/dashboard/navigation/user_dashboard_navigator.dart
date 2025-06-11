@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wander_wallet/core/di/providers.dart';
+import 'package:wander_wallet/features/expenses/presentation/providers/create_expense_provider.dart';
+import 'package:wander_wallet/features/expenses/presentation/providers/edit_expense_provider.dart';
+import 'package:wander_wallet/features/expenses/presentation/providers/expense_details_provider.dart';
 import 'package:wander_wallet/features/expenses/presentation/screens/create_expense_screen.dart';
 import 'package:wander_wallet/features/expenses/presentation/screens/edit_expense_screen.dart';
 import 'package:wander_wallet/features/expenses/presentation/screens/expense_details_screen.dart';
+import 'package:wander_wallet/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:wander_wallet/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:wander_wallet/features/summary/presentation/providers/summary_provider.dart';
 import 'package:wander_wallet/features/summary/presentation/screens/summary_screen.dart';
+import 'package:wander_wallet/features/trips/presentation/providers/edit_trip_provider.dart';
+import 'package:wander_wallet/features/trips/presentation/providers/trip_details_provider.dart';
+import 'package:wander_wallet/features/trips/presentation/providers/trips_provider.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/create_trip_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/edit_trip_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trip_details_screen.dart';
 import 'package:wander_wallet/features/trips/presentation/screens/trips_screen.dart';
+
+import '../../trips/presentation/providers/create_trip_provider.dart';
 
 class UserDashboardNavigatorObserver extends NavigatorObserver {
   final WidgetRef ref;
@@ -18,7 +28,6 @@ class UserDashboardNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    print('Popped');
     _updateTitleFromRoute(previousRoute);
     super.didPop(route, previousRoute);
   }
@@ -47,8 +56,22 @@ class UserDashboardNavigatorObserver extends NavigatorObserver {
       _ => 'WanderWallet',
     };
 
+    final provider = switch (name) {
+      '/createTrip' => createTripProvider,
+      '/trips' => tripsProvider,
+      '/tripDetails' => tripDetailsProvider,
+      '/editTrip' => editTripProvider,
+      '/createExpense' => createExpenseProvider,
+      '/expenseDetails' => expenseDetailsProvider,
+      '/editExpense' => editExpenseProvider,
+      '/notifications' => notificationsScreenProvider,
+      '/summary' => summaryProvider,
+      _ => tripsProvider,
+    };
+
     Future.microtask(() {
       ref.read(screenTitleProvider.notifier).state = title;
+      ref.invalidate(provider);
     });
   }
 }
