@@ -4,7 +4,6 @@ import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/misc.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 
 sealed class TripsScreenState {
   TripsScreenState();
@@ -28,12 +27,10 @@ class TripsError extends TripsScreenState {
 }
 
 class TripsScreenNotifier extends AsyncNotifier<TripsScreenState> {
-  late final TripsRepository tripsRepository;
-
   TripsScreenNotifier();
   @override
   Future<TripsScreenState> build() async {
-    tripsRepository = ref.read(tripsRepositoryProvider);
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.getCurrentTrips();
 
@@ -45,6 +42,7 @@ class TripsScreenNotifier extends AsyncNotifier<TripsScreenState> {
   }
 
   Future<void> getTrips(TabType currentTab) async {
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = const AsyncValue.loading();
     Result res;
 
