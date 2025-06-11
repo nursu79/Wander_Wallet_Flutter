@@ -5,7 +5,6 @@ import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 
 sealed class EditTripScreenState {
   EditTripScreenState();
@@ -42,13 +41,11 @@ class EditTripUpdateError extends EditTripScreenState {
 }
 
 class EditTripScreenNotifier extends FamilyAsyncNotifier<EditTripScreenState, String> {
-  late final TripsRepository tripsRepository;
-
   EditTripScreenNotifier();
 
   @override
   Future<EditTripScreenState> build(String id) async {
-    tripsRepository = ref.read(tripsRepositoryProvider);
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.getTrip(arg);
     if (res is Success) {
@@ -59,6 +56,7 @@ class EditTripScreenNotifier extends FamilyAsyncNotifier<EditTripScreenState, St
   }
 
   Future<void> updateTrip(String name, String destination, num budget, DateTime startDate, DateTime endDate, File? tripImage) async {
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.updateTrip(arg, name, destination, budget, startDate, endDate, tripImage);
     if (res is Success) {
