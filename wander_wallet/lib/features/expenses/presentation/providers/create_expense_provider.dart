@@ -4,7 +4,6 @@ import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
 import 'package:wander_wallet/core/models/success.dart';
-import 'package:wander_wallet/features/expenses/domain/expenses_repository.dart';
 
 sealed class CreateExpenseScreenState {
   CreateExpenseScreenState();
@@ -28,17 +27,15 @@ class CreateExpenseError extends CreateExpenseScreenState {
 }
 
 class CreateExpenseScreenNotifier extends FamilyAsyncNotifier<CreateExpenseScreenState, String> {
-  late final ExpensesRepository expensesRepository;
-
   CreateExpenseScreenNotifier();
 
   @override
   Future<CreateExpenseScreenState> build(String id) async {
-    expensesRepository = ref.read(expensesRepositoryProvider);
     return CreateExpenseWaiting();
   }
 
   Future<void> createExpense(String name, num amount, Category category, DateTime date, String? notes) async {
+    final expensesRepository = ref.read(expensesRepositoryProvider);
     state = AsyncValue.loading();
     final res = await expensesRepository.createExpense(arg, name, amount, category, date, notes);
 
