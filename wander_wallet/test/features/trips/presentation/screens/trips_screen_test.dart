@@ -45,7 +45,12 @@ void main() {
         child: MaterialApp(
           navigatorObservers: [mockObserver],
           routes: {
-            '/tripDetails': (context) => const Scaffold(body: Text('Trip Details'))
+            '/tripDetails': (context) {
+              return const Scaffold(body: Text('Trip Details'));
+            },
+            '/createTrip': (context) {
+              return const Scaffold(body: Text('Create Trip'),);
+            }
           },
           home: const TripsScreen(),
         ),
@@ -76,8 +81,35 @@ void main() {
 
       expect(find.text(testMessageError.message), findsOneWidget);
     });
+
+    testWidgets('navigates to details screen on click', (tester) async {
+      final tripsState = AsyncValue.data(
+        TripsSuccess(testTripsPayload)
+      );
+
+      await pumpTripsScreen(tester, tripsState);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('View Details'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Trip Details'), findsOneWidget);
+    });
+
+    testWidgets('navigates to create trip screen on click', (tester) async {
+      final tripsState = AsyncValue.data(
+        TripsSuccess(testTripsPayload)
+      );
+
+      await pumpTripsScreen(tester, tripsState);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Create Trip'), findsOneWidget);
+    });
   });
-  
 }
 
 class FakeTripsScreenNotifier extends TripsScreenNotifier {

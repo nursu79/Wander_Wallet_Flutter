@@ -5,7 +5,6 @@ import 'package:wander_wallet/core/di/providers.dart';
 import 'package:wander_wallet/core/models/error.dart';
 import 'package:wander_wallet/core/models/payload.dart';
 import 'package:wander_wallet/core/models/result.dart';
-import 'package:wander_wallet/features/trips/domain/trips_repository.dart';
 
 sealed class CreateTripScreenState {
   CreateTripScreenState();
@@ -33,17 +32,15 @@ class CreateTripError extends CreateTripScreenState {
 }
 
 class CreateTripScreenNotifier extends AsyncNotifier<CreateTripScreenState> {
-  late final TripsRepository tripsRepository;
-
   CreateTripScreenNotifier();
 
   @override
   Future<CreateTripScreenState> build() async {
-    tripsRepository = ref.read(tripsRepositoryProvider);
     return CreateTripWaiting();
   }
 
   Future<void> createTrip(String name, String destination, num budget, DateTime startDate, DateTime endDate, File? tripImage) async {
+    final tripsRepository = ref.read(tripsRepositoryProvider);
     state = AsyncValue.loading();
     final res = await tripsRepository.createTrip(name, destination, budget, startDate, endDate, tripImage);
 
